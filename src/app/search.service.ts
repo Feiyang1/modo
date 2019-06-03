@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { TmdbHttpClientService } from './tmdb-http-client.service';
 
-const API_KEY = '6af285299e4495dab300171ed0b9d013';
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
   private movieSearchUrl = 'https://api.themoviedb.org/3/search/movie';
-  constructor(private http: HttpClient) { }
+  constructor(private http: TmdbHttpClientService) { }
 
   getMovies(options: MovieSearchOptions): Observable<Movie[]> {
+
+    if (!options.query) {
+      return of([]);
+    }
+
     const params = new HttpParams({
       fromObject: {
-        query: options.query,
-        api_key: API_KEY
+        query: options.query
       }
     });
 
@@ -68,4 +72,5 @@ interface TVSearchOptions extends SearchOptions {
 export interface Movie {
   title: string;
   release_date: string;
+  id: string; // tmdb id
 }

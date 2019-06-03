@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { TodolistsComponent } from './todolists/todolists.component';
 import { SearchComponent } from './search/search.component';
 import { HttpClientModule }    from '@angular/common/http';
+import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TodolistsComponent,
-    SearchComponent
+    SearchComponent,
+    MovieDetailComponent,
   ],
   imports: [
     BrowserModule,

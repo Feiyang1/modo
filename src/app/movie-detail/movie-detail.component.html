@@ -1,0 +1,10 @@
+<p>
+  movie-detail works!
+</p>
+<div *ngIf="movie">
+  <div>Detail for {{movie.title}}</div>
+  <div>{{movie.release_date}}</div>
+  <div *ngIf="movie.homepage">{{movie.homepage}}</div>
+  <div>{{movie.overview}}</div>
+
+</div>

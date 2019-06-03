@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Movie, SearchService } from '../search.service';
+import { Subject, Observable } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search',
@@ -7,13 +9,19 @@ import { Movie, SearchService } from '../search.service';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  private movies: Movie[] = [];
+  private movies$: Observable<Movie[]>;
+  private searchTerms = new Subject<string>();
   constructor(private searchService: SearchService) { }
 
   ngOnInit() {
-    this.searchService.getMovies({
-      query: 'Mad Max'
-    }).subscribe((movies: Movie[]) => this.movies = movies);
+    this.movies$ = this.searchTerms.pipe(
+      debounceTime(300),
+      switchMap((term: string) => this.searchService.getMovies({ query: term }))
+    );
+  }
+
+  search(term: string): void {
+    this.searchTerms.next(term);
   }
 
 }
