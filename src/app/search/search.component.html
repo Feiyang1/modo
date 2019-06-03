@@ -1,3 +1,7 @@
-<p>
-  search works!
-</p>
+<div class="search-box" contenteditable="true"></div>
+<ul>
+  <li *ngFor="let movie of movies">
+    <div>{{movie.title}}</div>
+    <div>{{movie.release_date}}</div>
+  </li>
+</ul>
