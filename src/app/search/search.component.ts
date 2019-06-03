@@ -11,9 +11,9 @@ export class SearchComponent implements OnInit {
   constructor(private searchService: SearchService) { }
 
   ngOnInit() {
-    this.movies = this.searchService.getMovies({
-      query: ''
-    });
+    this.searchService.getMovies({
+      query: 'Mad Max'
+    }).subscribe((movies: Movie[]) => this.movies = movies);
   }
 
 }
