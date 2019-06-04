@@ -1,0 +1,9 @@
+<p>
+  list works!
+</p>
+
+<div *ngFor="let movie of todoMovies">
+  <div>{{movie.title}}</div>
+  <div>watched: {{movie.watched}}</div>
+  <div *ngIf="movie.watched">watched at: {{movie.watched_time}}</div>
+</div>

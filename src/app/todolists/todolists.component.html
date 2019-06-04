@@ -1,3 +1,12 @@
 <p>
   todolists works!
 </p>
+
+<div *ngFor="let list of lists">
+  <a routerLink="list/{{list.id}}">
+    <div>{{list.name}}</div>
+  </a>
+  <div>{{list.movies.length}} movies</div>
+</div>
+
+<router-outlet></router-outlet>

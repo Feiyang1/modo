@@ -6,5 +6,5 @@
   <div>{{movie.release_date}}</div>
   <div *ngIf="movie.homepage">{{movie.homepage}}</div>
   <div>{{movie.overview}}</div>
-
+  <div (click)="addMovieToList(movie)">Add to my list</div>
 </div>

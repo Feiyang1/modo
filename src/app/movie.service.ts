@@ -19,7 +19,7 @@ export class MovieService {
 
 // TODO: add more properties
 export interface MovieDetail {
-  id: string; // tmdb id
+  id: number; // tmdb id
   title: string;
   overview: string;
   release_date: string;

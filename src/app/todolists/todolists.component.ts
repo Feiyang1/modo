@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ListsService, ToDoMovieList } from '../lists.service';
 
 @Component({
   selector: 'app-todolists',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./todolists.component.css']
 })
 export class TodolistsComponent implements OnInit {
-
-  constructor() { }
-
+  lists: ToDoMovieList[] = [];
+  constructor(private listsService: ListsService) { }
+  
   ngOnInit() {
+    this.lists = this.listsService.getLists();
   }
 
 }

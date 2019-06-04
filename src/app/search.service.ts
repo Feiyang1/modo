@@ -72,5 +72,5 @@ interface TVSearchOptions extends SearchOptions {
 export interface Movie {
   title: string;
   release_date: string;
-  id: string; // tmdb id
+  id: number; // tmdb id
 }

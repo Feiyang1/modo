@@ -7,6 +7,7 @@ import { TodolistsComponent } from './todolists/todolists.component';
 import { SearchComponent } from './search/search.component';
 import { HttpClientModule }    from '@angular/common/http';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
+import { ListComponent } from './list/list.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { MovieDetailComponent } from './movie-detail/movie-detail.component';
     TodolistsComponent,
     SearchComponent,
     MovieDetailComponent,
+    ListComponent,
   ],
   imports: [
     BrowserModule,
