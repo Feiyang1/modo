@@ -4,6 +4,7 @@ import { TodolistsComponent } from './todolists/todolists.component';
 import { SearchComponent } from './search/search.component';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
+import { AddlistComponent } from './addlist/addlist.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
       {
         path: 'list/:id',
         component: ListComponent
+      },
+      {
+        path: 'addlist',
+        component: AddlistComponent
       }
     ]
   },

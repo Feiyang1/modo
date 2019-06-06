@@ -8,6 +8,7 @@ import { SearchComponent } from './search/search.component';
 import { HttpClientModule }    from '@angular/common/http';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
+import { AddlistComponent } from './addlist/addlist.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { ListComponent } from './list/list.component';
     SearchComponent,
     MovieDetailComponent,
     ListComponent,
+    AddlistComponent,
   ],
   imports: [
     BrowserModule,
