@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ListsService } from '../lists.service';
 
 @Component({
   selector: 'app-addlist',
@@ -7,8 +8,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./addlist.component.css']
 })
 export class AddlistComponent implements OnInit {
-
-  constructor(private router: Router) { }
+  error: string;
+  constructor(
+    private router: Router,
+    private listsService: ListsService
+    ) { }
 
   ngOnInit() {
   }
@@ -18,7 +22,13 @@ export class AddlistComponent implements OnInit {
   }
 
   add(listName: string) {
-    console.log('new list name is ', listName);
+    this.listsService.addList(listName).subscribe(success => {
+      if (success) {
+        this.router.navigate(['']);
+      } else {
+        this.error = 'list with the same name already exists';
+      }
+    });
   }
 
 }

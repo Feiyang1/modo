@@ -16,8 +16,16 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.todoMovies = this.listsService.getList(id);
+    // subscribe to params change
+    this.route.params.subscribe(params => {
+      const id = params.id;
+      const list = this.listsService.getList(id);
+
+      // should always be true
+      if (list) {
+        this.todoMovies = list.movies;
+      }
+    });
   }
 
 }

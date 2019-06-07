@@ -13,9 +13,4 @@ export class TodolistsComponent implements OnInit {
   ngOnInit() {
     this.lists = this.listsService.getLists();
   }
-
-  addList(): void {
-    console.log('add a list');
-  }
-
 }

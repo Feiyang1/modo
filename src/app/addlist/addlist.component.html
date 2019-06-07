@@ -5,4 +5,5 @@
   <input #listname type="text" />
   <div (click)="add(listname.value)">add</div>
   <div (click)="cancel()">cancel</div>
+  <div class="error" *ngIf="error">{{error}}</div>
 </div>
