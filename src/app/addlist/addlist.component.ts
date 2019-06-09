@@ -12,7 +12,7 @@ export class AddlistComponent implements OnInit {
   constructor(
     private router: Router,
     private listsService: ListsService
-    ) { }
+  ) { }
 
   ngOnInit() {
   }
@@ -22,13 +22,13 @@ export class AddlistComponent implements OnInit {
   }
 
   add(listName: string) {
-    this.listsService.addList(listName).subscribe(success => {
-      if (success) {
+    this.listsService.addList(listName).subscribe(
+      _success => {
         this.router.navigate(['']);
-      } else {
-        this.error = 'list with the same name already exists';
-      }
-    });
+      },
+      error => {
+        this.error = error;
+      });
   }
 
 }

@@ -1,0 +1,16 @@
+<div class="add-to-list-dialog">
+  <p>
+    add-to-list works!
+  </p>
+  <select  #list>
+    <option *ngFor="let list of lists" [value]="list.id">{{list.name}}</option>
+  </select>
+  <div (click)="add(list.value)">
+    Add
+  </div>
+  <div (click)="cancel()">
+    Cancel
+  </div>
+  <div class="error" *ngIf="error">{{error}}</div>
+</div>
+

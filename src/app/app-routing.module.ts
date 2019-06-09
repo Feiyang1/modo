@@ -5,6 +5,7 @@ import { SearchComponent } from './search/search.component';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
+import { AddToListComponent } from './add-to-list/add-to-list.component';
 
 const routes: Routes = [
   {
@@ -27,7 +28,13 @@ const routes: Routes = [
   },
   {
     path: 'movie/:id',
-    component: MovieDetailComponent
+    component: MovieDetailComponent,
+    children: [
+      {
+        path: 'addtolist',
+        component: AddToListComponent
+      }
+    ]
   },
   {
     path: '',

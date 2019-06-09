@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 const DEFAULT_LIST: ToDoMovie[] = [{
   id: 9659,
@@ -36,20 +36,33 @@ export class ListsService {
     return LISTS.find(list => list.id === id);
   }
 
-  addToList(id: string, movie: { imdb_id: string, id: number, title: string }): void {
-    DEFAULT_LIST.push({
+  addToList(listId: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
+    const list = LISTS.find(list => list.id === listId);
+
+    // should not happen
+    if (!list) {
+      return throwError('list does not exist');
+    }
+
+    if (list.movies.find(m => m.id === movie.id)) {
+      return throwError('movie already exists in the list');
+    }
+
+    list.movies.push({
       ...movie,
       watched: false
     });
+
+    return of(true);
   }
 
   addList(name: string): Observable<boolean> {
     if (LISTS.find(list => list.name === name)) {
-      return of(false);
+      return throwError('duplicate list');
     };
 
     const newList: ToDoMovieList = {
-      id: `${Math.floor(Math.random()*10000)}`,
+      id: `${Math.floor(Math.random() * 10000)}`,
       name,
       movies: []
     };

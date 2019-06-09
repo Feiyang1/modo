@@ -6,5 +6,6 @@
   <div>{{movie.release_date}}</div>
   <div *ngIf="movie.homepage">{{movie.homepage}}</div>
   <div>{{movie.overview}}</div>
-  <div (click)="addMovieToList(movie)">Add to my list</div>
+  <a routerLink="addtolist">+ Add to list</a>
 </div>
+<router-outlet></router-outlet>

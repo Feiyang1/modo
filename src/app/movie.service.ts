@@ -11,6 +11,7 @@ export class MovieService {
     private http: TmdbHttpClientService
   ) { }
 
+  // id: tmdb id
   getMovie(id: string): Observable<MovieDetail> {
     const url = `${this.baseUrl}/${id}`;
     return this.http.get(url) as Observable<MovieDetail>;
