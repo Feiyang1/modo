@@ -4,6 +4,12 @@
 
 <div *ngFor="let movie of todoMovies">
   <div>{{movie.title}}</div>
-  <div>watched: {{movie.watched}}</div>
-  <div *ngIf="movie.watched">watched at: {{movie.watched_time}}</div>
+  <div class="watch-state">
+    <div>watched: {{movie.watched}}</div>
+    <div class="watch-toggle">
+      <div (click)="toggleWatch(movie.id, true)" *ngIf="!movie.watched">Watch</div>
+      <div (click)="toggleWatch(movie.id, false)" *ngIf="movie.watched">Unwatch</div>
+    </div>
+  </div>
+  <div *ngIf="movie.watched">watched at: {{movie.watched_time | date}}</div>
 </div>

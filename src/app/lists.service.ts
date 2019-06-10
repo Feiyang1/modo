@@ -70,6 +70,27 @@ export class ListsService {
     LISTS.push(newList);
     return of(true);
   }
+
+  updateMovieWatchedState(listId: string, movieId: number, watched: boolean): Observable<boolean> {
+    const list = LISTS.find(list => list.id === listId);
+
+    // should not happen
+    if (!list) {
+      return throwError(`list ${listId} does not exist`);
+    }
+
+    const movie = list.movies.find(movie => movie.id === movieId);
+
+    // should nto happen
+    if(!movie) {
+      return throwError(`movie ${movie.id} does not exist`);
+    }
+
+    movie.watched = watched;
+    movie.watched_time = Date.now().toString();
+
+    return of(true);
+  }
 }
 
 export interface ToDoMovieList {
@@ -83,5 +104,5 @@ export interface ToDoMovie {
   imdb_id: string; // imdb_id
   title: string;
   watched: boolean;
-  watched_time?: string;
+  watched_time?: string; // ms since 1970
 }

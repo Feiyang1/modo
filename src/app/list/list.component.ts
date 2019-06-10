@@ -28,4 +28,15 @@ export class ListComponent implements OnInit {
     });
   }
 
+  toggleWatch(id: number, watched: boolean) {
+    const listId = this.route.snapshot.paramMap.get('id');
+    this.listsService.updateMovieWatchedState(listId, id, watched).subscribe(
+      _success => {
+        // do what?
+      },
+      _error => {
+        // report error
+      });
+  }
+
 }

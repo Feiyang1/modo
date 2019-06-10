@@ -1,0 +1,8 @@
+.watch-state {
+    display: flex;
+    flex-direction: row;
+}
+
+.watch-toggle {
+    margin-left: 10px;
+}
