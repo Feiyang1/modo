@@ -13,7 +13,7 @@ const routes: Routes = [
     component: TodolistsComponent,
     children: [
       {
-        path: 'list/:id',
+        path: 'list/:name',
         component: ListComponent
       },
       {

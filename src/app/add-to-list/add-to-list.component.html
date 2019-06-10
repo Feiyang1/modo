@@ -3,7 +3,7 @@
     add-to-list works!
   </p>
   <select  #list>
-    <option *ngFor="let list of lists" [value]="list.id">{{list.name}}</option>
+    <option *ngFor="let list of lists" [value]="list.name">{{list.name}}</option>
   </select>
   <div (click)="add(list.value)">
     Add

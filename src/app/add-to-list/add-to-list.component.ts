@@ -22,11 +22,11 @@ export class AddToListComponent implements OnInit {
     this.lists = this.listsService.getLists()
   }
 
-  add(listId: string) {
-    const movieId = this.route.parent.snapshot.paramMap.get('id');
+  add(listName: string) {
+    const movieId = this.route.parent!.snapshot.paramMap.get('id')!;
     this.movieService.getMovie(movieId).pipe(
       switchMap(movie => {
-        return this.listsService.addToList(listId, { imdb_id: movie.imdb_id, id: movie.id, title: movie.title });
+        return this.listsService.addToList(listName, { imdb_id: movie.imdb_id, id: movie.id, title: movie.title });
       })
     ).subscribe(
       _success => {

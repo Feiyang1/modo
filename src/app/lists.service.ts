@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, from } from 'rxjs';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
 
 const DEFAULT_LIST: ToDoMovie[] = [{
   id: 9659,
@@ -15,7 +17,6 @@ const DEFAULT_LIST: ToDoMovie[] = [{
 
 const LISTS = [
   {
-    id: '1',
     name: 'my list',
     movies: DEFAULT_LIST
   }
@@ -26,18 +27,18 @@ const LISTS = [
 })
 export class ListsService {
 
-  constructor() { }
+  constructor(private firestore: AngularFirestore) { }
 
   getLists(): ToDoMovieList[] {
     return LISTS;
   }
 
-  getList(id: string): ToDoMovieList | undefined {
-    return LISTS.find(list => list.id === id);
+  getList(name: string): ToDoMovieList | undefined {
+    return LISTS.find(list => list.name === name);
   }
 
-  addToList(listId: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
-    const list = LISTS.find(list => list.id === listId);
+  addToList(listName: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
+    const list = LISTS.find(list => list.name === listName);
 
     // should not happen
     if (!list) {
@@ -62,28 +63,29 @@ export class ListsService {
     };
 
     const newList: ToDoMovieList = {
-      id: `${Math.floor(Math.random() * 10000)}`,
       name,
       movies: []
     };
 
     LISTS.push(newList);
-    return of(true);
+    return from(this.firestore.doc(`lists/${name}`).set(newList)).pipe(map(_ => {
+      return true;
+    }));
   }
 
-  updateMovieWatchedState(listId: string, movieId: number, watched: boolean): Observable<boolean> {
-    const list = LISTS.find(list => list.id === listId);
+  updateMovieWatchedState(listName: string, movieId: number, watched: boolean): Observable<boolean> {
+    const list = LISTS.find(list => list.name === listName);
 
     // should not happen
     if (!list) {
-      return throwError(`list ${listId} does not exist`);
+      return throwError(`list ${listName} does not exist`);
     }
 
     const movie = list.movies.find(movie => movie.id === movieId);
 
     // should nto happen
-    if(!movie) {
-      return throwError(`movie ${movie.id} does not exist`);
+    if (!movie) {
+      return throwError(`movie ${movieId} does not exist`);
     }
 
     movie.watched = watched;
@@ -94,8 +96,7 @@ export class ListsService {
 }
 
 export interface ToDoMovieList {
-  id: string;
-  name: string;
+  name: string; // should be unique
   movies: ToDoMovie[];
 }
 

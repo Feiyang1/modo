@@ -18,8 +18,8 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     // subscribe to params change
     this.route.params.subscribe(params => {
-      const id = params.id;
-      const list = this.listsService.getList(id);
+      const name = params.name;
+      const list = this.listsService.getList(name);
 
       // should always be true
       if (list) {
@@ -29,8 +29,8 @@ export class ListComponent implements OnInit {
   }
 
   toggleWatch(id: number, watched: boolean) {
-    const listId = this.route.snapshot.paramMap.get('id');
-    this.listsService.updateMovieWatchedState(listId, id, watched).subscribe(
+    const listName = this.route.snapshot.paramMap.get('name')!;
+    this.listsService.updateMovieWatchedState(listName, id, watched).subscribe(
       _success => {
         // do what?
       },
