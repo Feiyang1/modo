@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError, from } from 'rxjs';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { map, switchMap } from 'rxjs/operators';
 
 const DEFAULT_LIST: ToDoMovie[] = [{
   id: 9659,
@@ -29,8 +29,14 @@ export class ListsService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  getLists(): ToDoMovieList[] {
-    return LISTS;
+  getLists(): Observable<ToDoMovieList[]> {
+    return this.firestore.collection('lists').get().pipe(map(querySnapshot => {
+      const lists: ToDoMovieList[] = [];
+      querySnapshot.forEach(result => {
+        lists.push(result.data() as ToDoMovieList);
+      });
+      return lists;
+    }));
   }
 
   getList(name: string): ToDoMovieList | undefined {
@@ -58,18 +64,21 @@ export class ListsService {
   }
 
   addList(name: string): Observable<boolean> {
-    if (LISTS.find(list => list.name === name)) {
-      return throwError('duplicate list');
-    };
 
     const newList: ToDoMovieList = {
       name,
       movies: []
     };
 
-    LISTS.push(newList);
-    return from(this.firestore.doc(`lists/${name}`).set(newList)).pipe(map(_ => {
-      return true;
+    const docPath = `lists/${name}`;
+    return this.firestore.doc(docPath).get().pipe(switchMap(doc => {
+      if (doc.exists) {
+        return throwError(`List ${name} already exists`);
+      }
+
+      return from(this.firestore.doc(`lists/${name}`).set(newList)).pipe(map(_ => {
+        return true;
+      }));
     }));
   }
 

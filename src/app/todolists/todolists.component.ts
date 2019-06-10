@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ListsService, ToDoMovieList } from '../lists.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todolists',
@@ -7,10 +8,10 @@ import { ListsService, ToDoMovieList } from '../lists.service';
   styleUrls: ['./todolists.component.css']
 })
 export class TodolistsComponent implements OnInit {
-  lists: ToDoMovieList[] = [];
+  lists$: Observable<ToDoMovieList[]>;
   constructor(private listsService: ListsService) { }
   
   ngOnInit() {
-    this.lists = this.listsService.getLists();
+    this.lists$ = this.listsService.getLists();
   }
 }

@@ -2,7 +2,7 @@
   todolists works!
 </p>
 
-<div *ngFor="let list of lists">
+<div *ngFor="let list of lists$ | async">
   <a routerLink="list/{{list.name}}">
     <div>{{list.name}}</div>
   </a>

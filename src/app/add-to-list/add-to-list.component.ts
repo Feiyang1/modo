@@ -3,6 +3,7 @@ import { ToDoMovieList, ListsService } from '../lists.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '../movie.service';
 import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-to-list',
@@ -10,7 +11,7 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./add-to-list.component.css']
 })
 export class AddToListComponent implements OnInit {
-  lists: ToDoMovieList[] = [];
+  lists$: Observable<ToDoMovieList[]>;
   error: string | null = null
   constructor(
     private route: ActivatedRoute,
@@ -19,7 +20,7 @@ export class AddToListComponent implements OnInit {
     private listsService: ListsService) { }
 
   ngOnInit() {
-    this.lists = this.listsService.getLists()
+    this.lists$ = this.listsService.getLists()
   }
 
   add(listName: string) {
