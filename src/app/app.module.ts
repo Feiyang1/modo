@@ -10,6 +10,9 @@ import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
 import { AddToListComponent } from './add-to-list/add-to-list.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,8 @@ import { AddToListComponent } from './add-to-list/add-to-list.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
