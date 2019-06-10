@@ -23,6 +23,7 @@ const LISTS = [
   }
 ];
 
+// TODO: rewrite check, then write operations with transaction
 @Injectable({
   providedIn: 'root'
 })
@@ -51,7 +52,7 @@ export class ListsService {
       if (!exists) {
         return throwError('list does not exist');
       }
-
+      // TODO: check if movie already exists using transaction possibly
       return from(this.firestore.doc(docPath).update({
         movies: firestore.FieldValue.arrayUnion({
           ...movie,
