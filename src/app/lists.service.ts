@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError, from } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, switchMap } from 'rxjs/operators';
+import { firestore } from 'firebase/app';
 
 const DEFAULT_LIST: ToDoMovie[] = [{
   id: 9659,
@@ -39,28 +40,26 @@ export class ListsService {
     }));
   }
 
-  getList(name: string): ToDoMovieList | undefined {
-    return LISTS.find(list => list.name === name);
+  getList(name: string): Observable<ToDoMovieList> {
+    return this.firestore.doc(`lists/${name}`).get().pipe(map(doc => doc.data() as ToDoMovieList));
   }
 
   addToList(listName: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
-    const list = LISTS.find(list => list.name === listName);
 
-    // should not happen
-    if (!list) {
-      return throwError('list does not exist');
-    }
+    const docPath = `lists/${listName}`;
+    return this.listExists(listName).pipe(switchMap(exists => {
+      if (!exists) {
+        return throwError('list does not exist');
+      }
 
-    if (list.movies.find(m => m.id === movie.id)) {
-      return throwError('movie already exists in the list');
-    }
+      return from(this.firestore.doc(docPath).update({
+        movies: firestore.FieldValue.arrayUnion({
+          ...movie,
+          watched: false
+        })
+      })).pipe(map(_ => true));
+    }));
 
-    list.movies.push({
-      ...movie,
-      watched: false
-    });
-
-    return of(true);
   }
 
   addList(name: string): Observable<boolean> {
@@ -71,15 +70,15 @@ export class ListsService {
     };
 
     const docPath = `lists/${name}`;
-    return this.firestore.doc(docPath).get().pipe(switchMap(doc => {
-      if (doc.exists) {
+    return this.listExists(name).pipe(switchMap(exists => {
+      if (exists) {
         return throwError(`List ${name} already exists`);
       }
 
-      return from(this.firestore.doc(`lists/${name}`).set(newList)).pipe(map(_ => {
+      return from(this.firestore.doc(docPath).set(newList)).pipe(map(_ => {
         return true;
       }));
-    }));
+    }))
   }
 
   updateMovieWatchedState(listName: string, movieId: number, watched: boolean): Observable<boolean> {
@@ -101,6 +100,10 @@ export class ListsService {
     movie.watched_time = Date.now().toString();
 
     return of(true);
+  }
+
+  private listExists(listName: string): Observable<boolean> {
+    return this.firestore.doc(`lists/${listName}`).get().pipe(map(doc => doc.exists));
   }
 }
 

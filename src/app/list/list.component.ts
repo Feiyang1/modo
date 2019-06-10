@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ListsService, ToDoMovie } from '../lists.service';
+import { ListsService, ToDoMovie, ToDoMovieList } from '../lists.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -8,7 +9,7 @@ import { ListsService, ToDoMovie } from '../lists.service';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  todoMovies: ToDoMovie[] = [];
+  list$: Observable<ToDoMovieList>;
 
   constructor(
     private route: ActivatedRoute,
@@ -19,12 +20,7 @@ export class ListComponent implements OnInit {
     // subscribe to params change
     this.route.params.subscribe(params => {
       const name = params.name;
-      const list = this.listsService.getList(name);
-
-      // should always be true
-      if (list) {
-        this.todoMovies = list.movies;
-      }
+      this.list$ = this.listsService.getList(name);
     });
   }
 
