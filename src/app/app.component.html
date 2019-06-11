@@ -4,12 +4,17 @@
     Welcome to {{ title }}!
   </h1>
 </div>
-<nav>
-  <a routerLink="mylists" class="tab">My Lists</a>
-  <a routerLink="search" class="tab">Search</a>
-</nav>
-<div>
+<ng-template #showLogin>
   <p>Please log in</p>
   <button (click)="login()">Login with Google</button>
+</ng-template>
+<div *ngIf="user$ | async; else showLogin">
+  <div>{{(user$ | async)?.displayName}}</div>
+  <nav>
+    <a routerLink="mylists" class="tab">My Lists</a>
+    <a routerLink="search" class="tab">Search</a>
+  </nav>
+  <button (click)="logout()">Logout</button>
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>
+

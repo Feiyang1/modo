@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,21 @@ import { auth } from 'firebase/app';
 })
 export class AppComponent {
   title = 'modo';
-
+  user$: Observable<any>;
   constructor(private afAuth: AngularFireAuth){}
+
+  ngOnInit() {
+    this.user$ = this.afAuth.user;
+    this.user$.subscribe(val => {
+      console.log('user$', val);
+    })
+  }
 
   login(): void {
     this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+  }
+
+  logout(): void {
+    this.afAuth.auth.signOut();
   }
 }
