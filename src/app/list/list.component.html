@@ -2,7 +2,7 @@
   list works!
 </p>
 
-<div *ngFor="let movie of (list$ | async).movies">
+<div *ngFor="let movie of (list$ | async)?.movies">
   <div>{{movie.title}}</div>
   <div class="watch-state">
     <div>watched: {{movie.watched}}</div>

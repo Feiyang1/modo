@@ -15,9 +15,6 @@ export class AppComponent {
 
   ngOnInit() {
     this.user$ = this.afAuth.user;
-    this.user$.subscribe(val => {
-      console.log('user$', val);
-    })
   }
 
   login(): void {

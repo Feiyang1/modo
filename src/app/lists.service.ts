@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError, from } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { map, switchMap } from 'rxjs/operators';
 import { firestore } from 'firebase/app';
 
@@ -23,44 +24,64 @@ const LISTS = [
   }
 ];
 
-// TODO: rewrite check, then write operations with transaction
+// TODO: rewrite "check, then write operations" with transaction
 @Injectable({
   providedIn: 'root'
 })
 export class ListsService {
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(
+    private firestore: AngularFirestore,
+    private afAuth: AngularFireAuth
+  ) { }
 
   getLists(): Observable<ToDoMovieList[]> {
-    return this.firestore.collection('lists').get().pipe(map(querySnapshot => {
-      const lists: ToDoMovieList[] = [];
-      querySnapshot.forEach(result => {
-        lists.push(result.data() as ToDoMovieList);
-      });
-      return lists;
+    return this.afAuth.user.pipe(switchMap(user => {
+      if (!user) {
+        return throwError('not logged in');
+      }
+
+      return this.firestore.collection(`users/${user.uid}/lists`).get().pipe(map(querySnapshot => {
+        const lists: ToDoMovieList[] = [];
+        querySnapshot.forEach(result => {
+          lists.push(result.data() as ToDoMovieList);
+        });
+        return lists;
+      }))
     }));
   }
 
   getList(name: string): Observable<ToDoMovieList> {
-    return this.firestore.doc(`lists/${name}`).get().pipe(map(doc => doc.data() as ToDoMovieList));
+    return this.afAuth.user.pipe(switchMap(user => {
+      if(!user) {
+        return throwError('not logged in');
+      }
+
+      return this.firestore.doc(`users/${user.uid}/lists/${name}`).get().pipe(map(doc => doc.data() as ToDoMovieList))
+    }));
   }
 
   addToList(listName: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
 
-    const docPath = `lists/${listName}`;
-    return this.listExists(listName).pipe(switchMap(exists => {
-      if (!exists) {
-        return throwError('list does not exist');
+    return this.afAuth.user.pipe(switchMap(user => {
+      if (!user) {
+        return throwError('not logged in');
       }
-      // TODO: check if movie already exists using transaction possibly
-      return from(this.firestore.doc(docPath).update({
-        movies: firestore.FieldValue.arrayUnion({
-          ...movie,
-          watched: false
-        })
-      })).pipe(map(_ => true));
+      
+      const docPath = `users/${user.uid}/lists/${listName}`;
+      return this.listExists(user.uid, listName).pipe(switchMap(exists => {
+        if (!exists) {
+          return throwError('list does not exist');
+        }
+        // TODO: check if movie already exists using transaction
+        return from(this.firestore.doc(docPath).update({
+          movies: firestore.FieldValue.arrayUnion({
+            ...movie,
+            watched: false
+          })
+        })).pipe(map(_ => true));
+      }));
     }));
-
   }
 
   addList(name: string): Observable<boolean> {
@@ -69,17 +90,23 @@ export class ListsService {
       name,
       movies: []
     };
-
-    const docPath = `lists/${name}`;
-    return this.listExists(name).pipe(switchMap(exists => {
-      if (exists) {
-        return throwError(`List ${name} already exists`);
+    
+    return this.afAuth.user.pipe(switchMap(user => {
+      if(!user) {
+        return throwError('not logged in');
       }
 
-      return from(this.firestore.doc(docPath).set(newList)).pipe(map(_ => {
-        return true;
-      }));
-    }))
+      const docPath = `users/${user.uid}/lists/${name}`;
+      return this.listExists(user.uid, name).pipe(switchMap(exists => {
+        if (exists) {
+          return throwError(`List ${name} already exists`);
+        }
+  
+        return from(this.firestore.doc(docPath).set(newList)).pipe(map(_ => {
+          return true;
+        }));
+      }))
+    }));
   }
 
   updateMovieWatchedState(listName: string, movieId: number, watched: boolean): Observable<boolean> {
@@ -103,8 +130,8 @@ export class ListsService {
     return of(true);
   }
 
-  private listExists(listName: string): Observable<boolean> {
-    return this.firestore.doc(`lists/${listName}`).get().pipe(map(doc => doc.exists));
+  private listExists(uid: string, listName: string): Observable<boolean> {
+    return this.firestore.doc(`users/${uid}/lists/${listName}`).get().pipe(map(doc => doc.exists));
   }
 }
 
