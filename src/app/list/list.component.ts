@@ -20,7 +20,7 @@ export class ListComponent implements OnInit {
     // subscribe to params change
     this.route.params.subscribe(params => {
       const name = params.name;
-      this.list$ = this.listsService.getList(name);
+      this.list$ = this.listsService.getListOnce(name);
     });
   }
 

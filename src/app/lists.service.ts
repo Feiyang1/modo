@@ -41,17 +41,17 @@ export class ListsService {
         return throwError('not logged in');
       }
 
-      return this.firestore.collection(`users/${user.uid}/lists`).get().pipe(map(querySnapshot => {
+      return this.firestore.collection(`users/${user.uid}/lists`).valueChanges().pipe(map(querySnapshot => {
         const lists: ToDoMovieList[] = [];
         querySnapshot.forEach(result => {
-          lists.push(result.data() as ToDoMovieList);
+          lists.push(result as ToDoMovieList);
         });
         return lists;
       }))
     }));
   }
 
-  getList(name: string): Observable<ToDoMovieList> {
+  getListOnce(name: string): Observable<ToDoMovieList> {
     return this.afAuth.user.pipe(switchMap(user => {
       if(!user) {
         return throwError('not logged in');
