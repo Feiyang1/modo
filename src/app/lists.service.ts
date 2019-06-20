@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError, from } from 'rxjs';
+import { Observable, of, throwError, from, zip } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { map, switchMap } from 'rxjs/operators';
@@ -53,12 +53,28 @@ export class ListsService {
 
   getListOnce(name: string): Observable<ToDoMovieList> {
     return this.afAuth.user.pipe(switchMap(user => {
-      if(!user) {
+      if (!user) {
         return throwError('not logged in');
       }
 
       return this.firestore.doc(`users/${user.uid}/lists/${name}`).get().pipe(map(doc => doc.data() as ToDoMovieList))
     }));
+  }
+
+  getList(name: string): Observable<ToDoMovieList | null> {
+    return this.afAuth.user.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError('not logged in');
+        }
+
+        return of(user);
+      }),
+      switchMap(user => 
+        this.firestore.doc(`users/${user.uid}/lists/${name}`).valueChanges() as Observable<ToDoMovieList | null>
+      )
+    );
+
   }
 
   addToList(listName: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
@@ -67,7 +83,7 @@ export class ListsService {
       if (!user) {
         return throwError('not logged in');
       }
-      
+
       const docPath = `users/${user.uid}/lists/${listName}`;
       return this.listExists(user.uid, listName).pipe(switchMap(exists => {
         if (!exists) {
@@ -90,9 +106,9 @@ export class ListsService {
       name,
       movies: []
     };
-    
+
     return this.afAuth.user.pipe(switchMap(user => {
-      if(!user) {
+      if (!user) {
         return throwError('not logged in');
       }
 
@@ -101,7 +117,7 @@ export class ListsService {
         if (exists) {
           return throwError(`List ${name} already exists`);
         }
-  
+
         return from(this.firestore.doc(docPath).set(newList)).pipe(map(_ => {
           return true;
         }));
@@ -110,29 +126,50 @@ export class ListsService {
   }
 
   updateMovieWatchedState(listName: string, movieId: number, watched: boolean): Observable<boolean> {
-    const list = LISTS.find(list => list.name === listName);
+    console.log('update movie watched')
+    let docPath = '';
+    return this.afAuth.user.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError('not logged in');
+        }
 
-    // should not happen
-    if (!list) {
-      return throwError(`list ${listName} does not exist`);
-    }
+        return of(user);
+      }),
+      switchMap((user) => {
+        docPath = `users/${user.uid}/lists/${listName}`;
+        return this.firestore.doc(docPath).get();
+      }),
+      switchMap(snapshot => {
+        if (!snapshot.exists) {
+          return throwError(`List ${listName} doesn't exist`);
+        }
 
-    const movie = list.movies.find(movie => movie.id === movieId);
+        const data: ToDoMovieList = snapshot.data() as ToDoMovieList;
+        const movie = data.movies && data.movies.find((m) => m.id === movieId);
 
-    // should nto happen
-    if (!movie) {
-      return throwError(`movie ${movieId} does not exist`);
-    }
+        if (!movie) {
+          return throwError(`Movie ${movieId} doesn't exist in list ${listName}`);
+        }
 
-    movie.watched = watched;
-    movie.watched_time = Date.now().toString();
+        movie.watched = watched;
+        movie.watched_time = Date.now();
 
-    return of(true);
+        return of(data.movies);
+      }),
+      switchMap(updatedMovies =>
+        from(this.firestore.doc(docPath).update({
+          movies: updatedMovies
+        }))
+      ),
+      map(_ => true)
+    );
   }
 
   private listExists(uid: string, listName: string): Observable<boolean> {
     return this.firestore.doc(`users/${uid}/lists/${listName}`).get().pipe(map(doc => doc.exists));
   }
+
 }
 
 export interface ToDoMovieList {
@@ -145,5 +182,5 @@ export interface ToDoMovie {
   imdb_id: string; // imdb_id
   title: string;
   watched: boolean;
-  watched_time?: string; // ms since 1970
+  watched_time?: number; // ms since 1970
 }

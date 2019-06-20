@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  list$: Observable<ToDoMovieList>;
+  list$: Observable<ToDoMovieList | null>;
 
   constructor(
     private route: ActivatedRoute,
@@ -20,7 +20,7 @@ export class ListComponent implements OnInit {
     // subscribe to params change
     this.route.params.subscribe(params => {
       const name = params.name;
-      this.list$ = this.listsService.getListOnce(name);
+      this.list$ = this.listsService.getList(name);
     });
   }
 
