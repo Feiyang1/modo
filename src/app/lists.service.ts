@@ -70,7 +70,7 @@ export class ListsService {
 
         return of(user);
       }),
-      switchMap(user => 
+      switchMap(user =>
         this.firestore.doc(`users/${user.uid}/lists/${name}`).valueChanges() as Observable<ToDoMovieList | null>
       )
     );
@@ -163,6 +163,35 @@ export class ListsService {
         }))
       ),
       map(_ => true)
+    );
+  }
+
+  deleteMovie(listName: string, movieId: number): Observable<boolean> {
+    let docPath = '';
+    return this.afAuth.user.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError('not logged in');
+        }
+
+        return of(user);
+      }),
+      switchMap(user => {
+        docPath = `users/${user.uid}/lists/${listName}`;
+        return this.firestore.doc(docPath).get();
+      }),
+      switchMap(snapshot => {
+        if (!snapshot.exists) {
+          return throwError(`List ${listName} doesn't exist`);
+        }
+
+        const data: ToDoMovieList = snapshot.data() as ToDoMovieList;
+        const movies = data.movies || [];
+        return from(this.firestore.doc(docPath).update({
+          movies: movies.filter(m => m.id !== movieId)
+        }));
+      }),
+      map( _ => true)
     );
   }
 

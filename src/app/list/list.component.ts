@@ -25,14 +25,28 @@ export class ListComponent implements OnInit {
   }
 
   toggleWatch(id: number, watched: boolean) {
-    const listName = this.route.snapshot.paramMap.get('name')!;
-    this.listsService.updateMovieWatchedState(listName, id, watched).subscribe(
+    this.listsService.updateMovieWatchedState(this.getListName(), id, watched).subscribe(
       _success => {
         // do what?
       },
       _error => {
         // report error
       });
+  }
+
+  deleteMovie(id: number) {
+    this.listsService.deleteMovie(this.getListName(), id).subscribe(
+      _success => {
+        // do what?
+      },
+      _error => {
+        // report error
+      }
+    );
+  }
+
+  private getListName() {
+    return this.route.snapshot.paramMap.get('name')!;
   }
 
 }
