@@ -9,9 +9,10 @@ import { TmdbHttpClientService } from './tmdb-http-client.service';
 })
 export class SearchService {
   private movieSearchUrl = 'https://api.themoviedb.org/3/search/movie';
+  private allSearchUrl = 'https://api.themoviedb.org/3/search/multi';
   constructor(private http: TmdbHttpClientService) { }
 
-  getMovies(options: MovieSearchOptions): Observable<Movie[]> {
+  getMovies(options: MovieSearchOptions): Observable<SearchResultItem[]> {
 
     if (!options.query) {
       return of([]);
@@ -28,9 +29,15 @@ export class SearchService {
         params
       })
       .pipe(
-        map<any, Movie[]>(value => value.results),
+        map(value => {
+          // TODO: pagination
+          return ((value as any).results as []).map(movie => ({
+            type: ResultType.MOVIE,
+            result: movie
+          }));
+        }),
         catchError(this.handleError('getMovies', []))
-      ) as Observable<Movie[]>;
+      ) as Observable<SearchResultItem[]>;
   }
 
   getTVs(options: TVSearchOptions): void {
@@ -41,8 +48,42 @@ export class SearchService {
 
   }
 
-  getAll(options: SearchOptions): void {
+  getAll(options: SearchOptions): Observable<SearchResultItem[]> {
+    if (!options.query) {
+      return of([]);
+    }
 
+    const params = new HttpParams({
+      fromObject: {
+        query: options.query
+      }
+    });
+
+    return this.http.get(this.allSearchUrl, {
+      params
+    }).pipe(
+      map(value => {
+        return ((value as any).results as []).map(result => {
+
+          let type = ResultType.UNKNOWN;
+          switch((result as any).media_type) {
+            case 'tv':
+              type = ResultType.TV;
+              break;
+            case 'movie':
+              type = ResultType.MOVIE;
+              break;
+            case 'person':
+              type = ResultType.TV
+          }
+
+          return {
+            type,
+            result
+          };
+        });
+      })
+    );
   }
 
   handleError(operation: string, result: unknown)
@@ -73,4 +114,26 @@ export interface Movie {
   title: string;
   release_date: string;
   id: number; // tmdb id
+}
+
+export interface Tv {
+  name: string;
+  id: number; // tmdb id
+  first_air_date: string;
+}
+
+export interface Person {
+
+}
+
+export interface SearchResultItem {
+  type: ResultType,
+  result: Movie | Tv | Person
+}
+
+export const enum ResultType {
+  TV = 'TV',
+  MOVIE = 'MOVIE',
+  PERSON = 'PERSON',
+  UNKNOWN = 'UNKNOWN'
 }

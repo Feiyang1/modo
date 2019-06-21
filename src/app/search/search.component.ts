@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Movie, SearchService } from '../search.service';
+import { SearchService, SearchResultItem } from '../search.service';
 import { Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 
@@ -9,14 +9,14 @@ import { debounceTime, switchMap } from 'rxjs/operators';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  private movies$: Observable<Movie[]>;
+  private searchResultItems$: Observable<SearchResultItem[]>;
   private searchTerms = new Subject<string>();
   constructor(private searchService: SearchService) { }
-
+  // TODO: render movie, tv, person differently
   ngOnInit() {
-    this.movies$ = this.searchTerms.pipe(
+    this.searchResultItems$ = this.searchTerms.pipe(
       debounceTime(300),
-      switchMap((term: string) => this.searchService.getMovies({ query: term }))
+      switchMap((term: string) => this.searchService.getAll({ query: term }))
     );
   }
 
