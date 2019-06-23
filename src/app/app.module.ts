@@ -16,6 +16,8 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomReuseStrategy } from 'src/route-reuse-strategy';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { TvDetailComponent } from './tv-detail/tv-detail.component';
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
-  providers: [],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
