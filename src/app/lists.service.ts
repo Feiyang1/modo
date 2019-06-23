@@ -110,8 +110,7 @@ export class ListsService {
     }));
   }
 
-
-  // TODO: implement watching a tv
+  // TODO: watch a season/episode of a TV series
   updateItemWatchedState(listName: string, itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {
     console.log('update movie watched')
     let docPath = '';
@@ -134,7 +133,8 @@ export class ListsService {
         }
 
         const data: ToDoList = snapshot.data() as ToDoList;
-        const item: ToDoMovie | ToDoTv = data[arrayName] && (data[arrayName] as any[]).find(item => item.id === itemId);
+        const item: ToDoMovie | ToDoTv
+          = data[arrayName] && Array.prototype.find.call(data[arrayName], item => item.id === itemId); // typescript can't handle data[arrayName].filter(..)
 
         if (!item) {
           return throwError(`${itemType} ${itemId} doesn't exist in list ${listName}`);
@@ -157,6 +157,7 @@ export class ListsService {
   // TODO: implement deleting TV
   deleteItem(listName: string, itemId: number, itemType: ItemType): Observable<boolean> {
     let docPath = '';
+    const arrayName = todoArrayName(itemType);
     return this.afAuth.user.pipe(
       switchMap(user => {
         if (!user) {
@@ -175,9 +176,9 @@ export class ListsService {
         }
 
         const data: ToDoList = snapshot.data() as ToDoList;
-        const movies = data.movies || [];
+        const items = data[arrayName] || [];
         return from(this.firestore.doc(docPath).update({
-          movies: movies.filter(m => m.id !== itemId)
+          [arrayName]: Array.prototype.filter.call(items, m => m.id !== itemId)
         }));
       }),
       map(_ => true)
