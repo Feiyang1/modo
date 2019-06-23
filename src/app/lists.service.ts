@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { map, switchMap } from 'rxjs/operators';
 import { firestore } from 'firebase/app';
 import { ItemType } from './search.service';
+import { todoArrayName } from './util';
 
 // TODO: rewrite "check, then write operations" with transaction
 @Injectable({
@@ -67,7 +68,7 @@ export class ListsService {
       }
 
       const docPath = `users/${user.uid}/lists/${listName}`;
-      const arrayName = itemType === ItemType.MOVIE ? 'movies' : 'tvs';
+      const arrayName = todoArrayName(itemType);
       return this.listExists(user.uid, listName).pipe(switchMap(exists => {
         if (!exists) {
           return throwError('list does not exist');
@@ -114,6 +115,7 @@ export class ListsService {
   updateItemWatchedState(listName: string, itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {
     console.log('update movie watched')
     let docPath = '';
+    const arrayName = todoArrayName(itemType);
     return this.afAuth.user.pipe(
       switchMap(user => {
         if (!user) {
@@ -132,20 +134,20 @@ export class ListsService {
         }
 
         const data: ToDoList = snapshot.data() as ToDoList;
-        const movie = data.movies && data.movies.find((m) => m.id === itemId);
+        const item: ToDoMovie | ToDoTv = data[arrayName] && (data[arrayName] as any[]).find(item => item.id === itemId);
 
-        if (!movie) {
-          return throwError(`Movie ${itemId} doesn't exist in list ${listName}`);
+        if (!item) {
+          return throwError(`${itemType} ${itemId} doesn't exist in list ${listName}`);
         }
 
-        movie.watched = watched;
-        movie.watched_time = Date.now();
+        item.watched = watched;
+        item.watched_time = Date.now();
 
-        return of(data.movies);
+        return of(data[arrayName]);
       }),
-      switchMap(updatedMovies =>
+      switchMap(updatedItems =>
         from(this.firestore.doc(docPath).update({
-          movies: updatedMovies
+          [arrayName]: updatedItems
         }))
       ),
       map(_ => true)
@@ -178,14 +180,13 @@ export class ListsService {
           movies: movies.filter(m => m.id !== itemId)
         }));
       }),
-      map( _ => true)
+      map(_ => true)
     );
   }
 
   private listExists(uid: string, listName: string): Observable<boolean> {
     return this.firestore.doc(`users/${uid}/lists/${listName}`).get().pipe(map(doc => doc.exists));
   }
-
 }
 
 export interface ToDoList {
