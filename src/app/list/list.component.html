@@ -1,16 +1,30 @@
-<p>
-  list works!
-</p>
 
-<div *ngFor="let movie of (list$ | async)?.movies">
-  <div>{{movie.title}}</div>
-  <div class="watch-state">
-    <div>watched: {{movie.watched}}</div>
-    <div class="watch-toggle">
-      <div (click)="toggleWatch(movie.id, true)" *ngIf="!movie.watched">Watch</div>
-      <div (click)="toggleWatch(movie.id, false)" *ngIf="movie.watched">Unwatch</div>
+<ng-template #movies [ngIf]="isMovieList()" [ngIfElse]="tvs">
+  <div *ngFor="let movie of (list$ | async)?.movies">
+    <div>{{movie.title}}</div>
+    <div class="watch-state">
+      <div>watched: {{movie.watched}}</div>
+      <div class="watch-toggle">
+        <div (click)="toggleWatch(movie.id, true)" *ngIf="!movie.watched">Watch</div>
+        <div (click)="toggleWatch(movie.id, false)" *ngIf="movie.watched">Unwatch</div>
+      </div>
     </div>
+    <div *ngIf="movie.watched">watched at: {{movie.watched_time | date}}</div>
+    <div (click)="deleteItem(movie.id)">- delete</div>
   </div>
-  <div *ngIf="movie.watched">watched at: {{movie.watched_time | date}}</div>
-  <div (click)="deleteMovie(movie.id)">- delete</div>
-</div>
+</ng-template>
+
+<ng-template #tvs>
+  <div *ngFor="let tv of (list$ | async)?.tvs">
+    <div>{{tv.name}}</div>
+    <div class="watch-state">
+      <div>watched: {{tv.watched}}</div>
+      <div class="watch-toggle">
+        <div (click)="toggleWatch(tv.id, true)" *ngIf="!movie.watched">Watch</div>
+        <div (click)="toggleWatch(tv.id, false)" *ngIf="movie.watched">Unwatch</div>
+      </div>
+    </div>
+    <div *ngIf="tv.watched">watched at: {{tv.watched_time | date}}</div>
+    <div (click)="deleteItem(tv.id)">- delete</div>
+  </div>
+</ng-template>

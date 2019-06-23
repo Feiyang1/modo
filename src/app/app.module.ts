@@ -14,6 +14,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
+import { ListContainerComponent } from './list-container/list-container.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { environment } from '../environments/environment';
     ListComponent,
     AddlistComponent,
     AddToListComponent,
+    ListContainerComponent,
   ],
   imports: [
     BrowserModule,

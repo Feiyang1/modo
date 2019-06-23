@@ -6,6 +6,7 @@ import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
 import { AddToListComponent } from './add-to-list/add-to-list.component';
+import { ListContainerComponent } from './list-container/list-container.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,18 @@ const routes: Routes = [
     children: [
       {
         path: 'list/:name',
-        component: ListComponent
+        component: ListContainerComponent,
+        children: [
+          {
+            path: ':type', // movie or tv
+            component: ListComponent
+          },
+          {
+            path: '',
+            redirectTo: 'movies',
+            pathMatch: 'full'
+          }
+        ]
       },
       {
         path: 'addlist',

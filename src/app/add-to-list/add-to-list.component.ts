@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToDoMovieList, ListsService } from '../lists.service';
+import { ToDoList, ListsService } from '../lists.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '../movie.service';
 import { switchMap } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./add-to-list.component.css']
 })
 export class AddToListComponent implements OnInit {
-  lists$: Observable<ToDoMovieList[]>;
+  lists$: Observable<ToDoList[]>;
   error: string | null = null
   constructor(
     private route: ActivatedRoute,

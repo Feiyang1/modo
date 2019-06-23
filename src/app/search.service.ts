@@ -32,7 +32,7 @@ export class SearchService {
         map(value => {
           // TODO: pagination
           return ((value as any).results as []).map(movie => ({
-            type: ResultType.MOVIE,
+            type: ItemType.MOVIE,
             result: movie
           }));
         }),
@@ -65,16 +65,16 @@ export class SearchService {
       map(value => {
         return ((value as any).results as []).map(result => {
 
-          let type = ResultType.UNKNOWN;
+          let type = ItemType.UNKNOWN;
           switch((result as any).media_type) {
             case 'tv':
-              type = ResultType.TV;
+              type = ItemType.TV;
               break;
             case 'movie':
-              type = ResultType.MOVIE;
+              type = ItemType.MOVIE;
               break;
             case 'person':
-              type = ResultType.TV
+              type = ItemType.TV
           }
 
           return {
@@ -127,11 +127,11 @@ export interface Person {
 }
 
 export interface SearchResultItem {
-  type: ResultType,
+  type: ItemType,
   result: Movie | Tv | Person
 }
 
-export const enum ResultType {
+export const enum ItemType {
   TV = 'TV',
   MOVIE = 'MOVIE',
   PERSON = 'PERSON',

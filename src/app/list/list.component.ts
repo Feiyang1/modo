@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ListsService, ToDoMovie, ToDoMovieList } from '../lists.service';
+import { ListsService, ToDoList } from '../lists.service';
 import { Observable } from 'rxjs';
+import { routeParams$, routeParams } from '../util';
+import { ItemType } from '../search.service';
 
+// TV list or Movie list
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  list$: Observable<ToDoMovieList | null>;
+  list$: Observable<ToDoList | null>;
+  type: ItemType = ItemType.UNKNOWN;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,14 +22,15 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     // subscribe to params change
-    this.route.params.subscribe(params => {
+    routeParams$(this.route).subscribe(params => {
       const name = params.name;
+      this.type = params.type === 'movies' ? ItemType.MOVIE : ItemType.TV;
       this.list$ = this.listsService.getList(name);
     });
   }
 
   toggleWatch(id: number, watched: boolean) {
-    this.listsService.updateMovieWatchedState(this.getListName(), id, watched).subscribe(
+    this.listsService.updateItemWatchedState(this.getListName(), id, this.type, watched).subscribe(
       _success => {
         // do what?
       },
@@ -34,8 +39,8 @@ export class ListComponent implements OnInit {
       });
   }
 
-  deleteMovie(id: number) {
-    this.listsService.deleteMovie(this.getListName(), id).subscribe(
+  deleteItem(id: number) {
+    this.listsService.deleteItem(this.getListName(), id, this.type).subscribe(
       _success => {
         // do what?
       },
@@ -46,7 +51,11 @@ export class ListComponent implements OnInit {
   }
 
   private getListName() {
-    return this.route.snapshot.paramMap.get('name')!;
+    return routeParams(this.route)['name'];
+  }
+
+  isMovieList(): boolean {
+    return this.type === ItemType.MOVIE;
   }
 
 }
