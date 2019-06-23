@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ToDoList, ListsService } from '../lists.service';
+import { ToDoList, ListsService, ToDoMovie, ToDoTv } from '../lists.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '../movie.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { TvService } from '../tv.service';
+import { ItemType } from '../search.service';
 
 @Component({
   selector: 'app-add-to-list',
@@ -17,6 +19,7 @@ export class AddToListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private movieService: MovieService,
+    private tvService: TvService,
     private listsService: ListsService) { }
 
   ngOnInit() {
@@ -24,11 +27,35 @@ export class AddToListComponent implements OnInit {
   }
 
   add(listName: string) {
-    const movieId = this.route.parent!.snapshot.paramMap.get('id')!;
-    this.movieService.getMovie(movieId).pipe(
-      switchMap(movie => {
-        return this.listsService.addToList(listName, { imdb_id: movie.imdb_id, id: movie.id, title: movie.title });
-      })
+    const itemId = this.route.parent!.snapshot.paramMap.get('id')!;
+    const type = this.route.snapshot.data['type']! as ItemType;
+
+    let todoItem$: Observable<ToDoMovie | ToDoTv>;
+    if (type === ItemType.MOVIE) {
+      todoItem$ = this.movieService.getMovie(itemId).pipe(
+        map(movie => ({
+          imdb_id: movie.imdb_id,
+          id: movie.id,
+          title: movie.title,
+          watched: false
+        }))
+      );
+    } else { // Adding a TV
+      todoItem$ = this.tvService.getTv(itemId).pipe(
+        map(tv => ({
+          id: tv.id,
+          name: tv.name,
+          watched: false
+        }))
+      );
+    }
+
+    todoItem$.pipe(
+      switchMap(item => this.listsService.addToList(
+        listName,
+        item,
+        type
+      ))
     ).subscribe(
       _success => {
         this.router.navigate(['..'], { relativeTo: this.route });

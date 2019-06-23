@@ -14,20 +14,11 @@ export class MovieDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private movieService: MovieService,
-    private listsService: ListsService
+    private movieService: MovieService
   ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.movie$ = this.movieService.getMovie(id);
-  }
-
-  private addMovieToList(movie: MovieDetail): void {
-    this.listsService.addToList('1', {
-      id: movie.id,
-      imdb_id: movie.imdb_id,
-      title: movie.title
-    });
   }
 }

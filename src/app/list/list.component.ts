@@ -36,6 +36,7 @@ export class ListComponent implements OnInit {
       },
       _error => {
         // report error
+        console.log(_error);
       });
   }
 

@@ -8,6 +8,7 @@ import { AddlistComponent } from './addlist/addlist.component';
 import { AddToListComponent } from './add-to-list/add-to-list.component';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
+import { ItemType } from './search.service';
 
 const routes: Routes = [
   {
@@ -45,7 +46,10 @@ const routes: Routes = [
     children: [
       {
         path: 'addtolist',
-        component: AddToListComponent
+        component: AddToListComponent,
+        data: {
+          type: ItemType.MOVIE
+        }
       }
     ]
   },
@@ -55,7 +59,10 @@ const routes: Routes = [
     children: [
       {
         path: 'addtolist',
-        component: AddToListComponent
+        component: AddToListComponent,
+        data: {
+          type: ItemType.TV
+        }
       }
     ]
   },

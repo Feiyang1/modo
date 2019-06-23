@@ -4,7 +4,7 @@
   <div *ngIf="tv.homepage">{{tv.homepage}}</div>
   <div>{{tv.overview}}</div>
   <div>Total {{tv.number_of_seasons}} seasons</div>
-  <img [src]="posterPath(tv)">
   <a routerLink="addtolist">+ Add to list</a>
+  <img [src]="posterPath(tv)">
 </div>
 <router-outlet></router-outlet>

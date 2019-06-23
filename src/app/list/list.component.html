@@ -20,8 +20,8 @@
     <div class="watch-state">
       <div>watched: {{tv.watched}}</div>
       <div class="watch-toggle">
-        <div (click)="toggleWatch(tv.id, true)" *ngIf="!movie.watched">Watch</div>
-        <div (click)="toggleWatch(tv.id, false)" *ngIf="movie.watched">Unwatch</div>
+        <div (click)="toggleWatch(tv.id, true)" *ngIf="!tv.watched">Watch</div>
+        <div (click)="toggleWatch(tv.id, false)" *ngIf="tv.watched">Unwatch</div>
       </div>
     </div>
     <div *ngIf="tv.watched">watched at: {{tv.watched_time | date}}</div>

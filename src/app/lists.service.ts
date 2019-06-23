@@ -59,7 +59,7 @@ export class ListsService {
 
   }
 
-  addToList(listName: string, movie: { imdb_id: string, id: number, title: string }): Observable<boolean> {
+  addToList(listName: string, item: ToDoMovie | ToDoTv, itemType: ItemType): Observable<boolean> {
 
     return this.afAuth.user.pipe(switchMap(user => {
       if (!user) {
@@ -67,14 +67,15 @@ export class ListsService {
       }
 
       const docPath = `users/${user.uid}/lists/${listName}`;
+      const arrayName = itemType === ItemType.MOVIE ? 'movies' : 'tvs';
       return this.listExists(user.uid, listName).pipe(switchMap(exists => {
         if (!exists) {
           return throwError('list does not exist');
         }
         // TODO: check if movie already exists using transaction
         return from(this.firestore.doc(docPath).update({
-          movies: firestore.FieldValue.arrayUnion({
-            ...movie,
+          [arrayName]: firestore.FieldValue.arrayUnion({
+            ...item,
             watched: false
           })
         })).pipe(map(_ => true));
