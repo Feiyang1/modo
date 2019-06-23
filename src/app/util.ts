@@ -13,3 +13,7 @@ export function routeParams(route: ActivatedRoute): Params {
     });
     return Object.assign({}, ...params);
 }
+
+export function posterPath(tmdbPartialPath: string, size = 'original') {
+    return `https://image.tmdb.org/t/p/${size}${tmdbPartialPath}`;
+}

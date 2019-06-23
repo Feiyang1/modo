@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieDetail, MovieService } from '../movie.service';
 import { ListsService } from '../lists.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-movie-detail',
@@ -9,7 +10,7 @@ import { ListsService } from '../lists.service';
   styleUrls: ['./movie-detail.component.css']
 })
 export class MovieDetailComponent implements OnInit {
-  movie: MovieDetail;
+  movie$: Observable<MovieDetail>;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,12 +19,8 @@ export class MovieDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getMovieDetail();
-  }
-
-  private getMovieDetail(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
-    this.movieService.getMovie(id).subscribe(value => this.movie = value);
+    this.movie$ = this.movieService.getMovie(id);
   }
 
   private addMovieToList(movie: MovieDetail): void {

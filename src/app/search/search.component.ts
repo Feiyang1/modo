@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SearchService, SearchResultItem } from '../search.service';
+import { SearchService, SearchResultItem, ItemType } from '../search.service';
 import { Subject, Observable } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 
@@ -22,6 +22,10 @@ export class SearchComponent implements OnInit {
 
   search(term: string): void {
     this.searchTerms.next(term);
+  }
+
+  isMovie(item: SearchResultItem): boolean {
+    return item.type === ItemType.MOVIE;
   }
 
 }

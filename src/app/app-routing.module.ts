@@ -7,6 +7,7 @@ import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
 import { AddToListComponent } from './add-to-list/add-to-list.component';
 import { ListContainerComponent } from './list-container/list-container.component';
+import { TvDetailComponent } from './tv-detail/tv-detail.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,16 @@ const routes: Routes = [
   {
     path: 'movie/:id',
     component: MovieDetailComponent,
+    children: [
+      {
+        path: 'addtolist',
+        component: AddToListComponent
+      }
+    ]
+  },
+  {
+    path: 'tv/:id',
+    component: TvDetailComponent,
     children: [
       {
         path: 'addtolist',

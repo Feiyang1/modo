@@ -26,6 +26,6 @@ export interface MovieDetail {
   overview: string;
   release_date: string;
   homepage?: string;
-  production_companies: unknown[];
-  cast: unknown[]
+  production_companies: unknown[]; // TODO
+  cast: unknown[]; // TODO
 }

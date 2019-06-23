@@ -1,9 +1,19 @@
 <input #searchBox id="search-box" (input)="search(searchBox.value)" />
 <ul>
   <li *ngFor="let item of searchResultItems$ | async">
-    <a routerLink="/movie/{{item.result.id}}">
-      <div>{{item.result.title || item.result.name}}</div>
-      <div>{{item.result.release_date || item.result.first_air_date}}</div>
-    </a>
+    <div *ngIf="isMovie(item); else tv">
+        <a routerLink="/movie/{{item.result.id}}">
+          <div>{{item.result.title}}</div>
+          <div>{{item.result.release_date}}</div>
+        </a>
+    </div>
+
+    <ng-template #tv>
+        <a routerLink="/tv/{{item.result.id}}">
+          <div>{{item.result.name}}</div>
+          <div>{{item.result.first_air_date}}</div>
+        </a>
+    </ng-template>
   </li>
 </ul>
+

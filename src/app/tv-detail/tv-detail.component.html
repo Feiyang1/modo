@@ -1,0 +1,10 @@
+<div *ngIf="tv$ | async as tv">
+  <div>Detail for {{tv.name}}</div>
+  <div>{{tv.first_air_date}}</div>
+  <div *ngIf="tv.homepage">{{tv.homepage}}</div>
+  <div>{{tv.overview}}</div>
+  <div>Total {{tv.number_of_seasons}} seasons</div>
+  <img [src]="posterPath(tv)">
+  <a routerLink="addtolist">+ Add to list</a>
+</div>
+<router-outlet></router-outlet>
