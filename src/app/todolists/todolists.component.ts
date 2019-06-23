@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ListsService, ToDoMovieList } from '../lists.service';
+import { ListsService, ToDoList } from '../lists.service';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-todolists',
@@ -8,8 +9,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./todolists.component.css']
 })
 export class TodolistsComponent implements OnInit {
-  lists$: Observable<ToDoMovieList[]>;
-  constructor(private listsService: ListsService) { }
+  lists$: Observable<ToDoList[]>;
+  constructor(private listsService: ListsService, public route: ActivatedRoute) { }
   
   ngOnInit() {
     this.lists$ = this.listsService.getLists();
