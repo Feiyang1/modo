@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TmdbHttpClientService } from './tmdb-http-client.service';
 
+// TODO: pagination
 @Injectable({
   providedIn: 'root'
 })

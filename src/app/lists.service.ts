@@ -7,7 +7,7 @@ import { firestore } from 'firebase/app';
 import { ItemType } from './search.service';
 import { todoArrayName } from './util';
 
-// TODO: rewrite "check, then write operations" with transaction
+// TODO: rewrite "check, then write" operations with transactions, delete a list, pagination
 @Injectable({
   providedIn: 'root'
 })
