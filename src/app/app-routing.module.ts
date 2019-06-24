@@ -38,6 +38,10 @@ const routes: Routes = [
   },
   {
     path: 'search',
+    redirectTo: 'search/'
+  },
+  {
+    path: 'search/:searchterm',
     component: SearchComponent
   },
   {

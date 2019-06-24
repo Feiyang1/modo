@@ -17,7 +17,7 @@ import { environment } from '../environments/environment';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
 import { RouteReuseStrategy } from '@angular/router';
-import { CustomReuseStrategy } from 'src/route-reuse-strategy';
+import { CustomReuseStrategy } from './route-reuse-strategy';
 
 @NgModule({
   declarations: [

@@ -12,7 +12,7 @@
   <div>{{(user$ | async)?.displayName}}</div>
   <nav>
     <a routerLink="mylists" class="tab">My Lists</a>
-    <a routerLink="search" class="tab">Search</a>
+    <a [routerLink]="searchUrl()" class="tab">Search</a>
   </nav>
   <button (click)="logout()">Logout</button>
   <router-outlet></router-outlet>

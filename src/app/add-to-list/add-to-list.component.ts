@@ -20,7 +20,8 @@ export class AddToListComponent implements OnInit {
     private router: Router,
     private movieService: MovieService,
     private tvService: TvService,
-    private listsService: ListsService) { }
+    private listsService: ListsService
+  ) { }
 
   ngOnInit() {
     this.lists$ = this.listsService.getLists()
