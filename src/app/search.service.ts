@@ -3,6 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TmdbHttpClientService } from './tmdb-http-client.service';
+import { validateEventsArray } from '@angular/fire/firestore';
 
 // TODO: pagination
 @Injectable({
@@ -49,14 +50,20 @@ export class SearchService {
 
   }
 
-  getAll(options: SearchOptions): Observable<SearchResultItem[]> {
+  getAll(options: SearchOptions): Observable<SearchResult> {
     if (!options.query) {
-      return of([]);
+      return of({
+        page: 1,
+        total_pages: 1,
+        total_results: 1,
+        results: []
+      });
     }
 
     const params = new HttpParams({
       fromObject: {
-        query: options.query
+        query: options.query,
+        page: (options.page && String(options.page)) || '1'
       }
     });
 
@@ -64,10 +71,10 @@ export class SearchService {
       params
     }).pipe(
       map(value => {
-        return ((value as any).results as []).map(result => {
+        (value as any).results = ((value as any).results as []).map(result => {
 
           let type = ItemType.UNKNOWN;
-          switch((result as any).media_type) {
+          switch ((result as any).media_type) {
             case 'tv':
               type = ItemType.TV;
               break;
@@ -83,6 +90,7 @@ export class SearchService {
             result
           };
         });
+        return value as SearchResult;
       })
     );
   }
@@ -127,6 +135,12 @@ export interface Person {
 
 }
 
+export interface SearchResult {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: SearchResultItem[];
+}
 export interface SearchResultItem {
   type: ItemType,
   result: Movie | Tv | Person

@@ -1,0 +1,7 @@
+.pages {
+    display: flex;
+}
+
+.current-page {
+    background-color: blue;
+}

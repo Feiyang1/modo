@@ -1,0 +1,5 @@
+<div class="pages">
+    <div [class.current-page]="p === page" (click)="onPage(p)" *ngFor="let p of getPages()">
+      {{p}}
+    </div>
+</div>

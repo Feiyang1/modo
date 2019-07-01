@@ -19,6 +19,7 @@ import { ListContainerComponent } from './list-container/list-container.componen
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './route-reuse-strategy';
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CustomReuseStrategy } from './route-reuse-strategy';
     AddToListComponent,
     ListContainerComponent,
     TvDetailComponent,
+    PaginationComponent,
   ],
   imports: [
     BrowserModule,
