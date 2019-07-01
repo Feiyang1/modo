@@ -37,7 +37,7 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
             return null;
         }
 
-        console.log("retrieving", "return: ", routeCache.get(route.routeConfig.path!));
+        console.log("retrieving", "return: ", routeCache.get(route.routeConfig.path!), route.url);
 
         /** returns handle when the route.routeConfig.path is already stored */
         return routeCache.get(route.routeConfig.path!)!.handle;

@@ -32,7 +32,7 @@ export class AppComponent {
   searchUrl() {
     const cachedRoute = getCachedRoute('search/:searchterm');
     if (!cachedRoute) {
-      return 'search';
+      return '/search';
     }
 
     const cachedSearchTerm = cachedRoute.snapshot.paramMap.get('searchterm')!;

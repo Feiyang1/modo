@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService, SearchResultItem, ItemType } from '../search.service';
 import { Subject, Observable } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { routeParams$ } from '../util';
 
@@ -12,7 +12,9 @@ import { routeParams$ } from '../util';
 })
 export class SearchComponent implements OnInit {
   private searchResultItems$: Observable<SearchResultItem[]>;
-  private searchTerms = new Subject<string>();
+  private searchTerm$ = new Subject<string>();
+  private searchTerm = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -22,23 +24,28 @@ export class SearchComponent implements OnInit {
   // TODO: render movie, tv, person differently
   ngOnInit() {
 
-    console.log('search init')
-
     // subscribe search text update
-    this.searchTerms.pipe(
+    this.searchTerm$.pipe(
       debounceTime(300)
     ).subscribe((searchTerm) => this.router.navigate([`/search/${searchTerm}`]));
 
     // subscribe to url param (search term) update
-    this.searchResultItems$ = routeParams$(this.route).pipe(switchMap(params => {
-      console.log('searrrch')
-      const searchTerm = params.searchterm;
-      return this.searchService.getAll({ query: searchTerm });
-    }));
+    this.searchResultItems$ = routeParams$(this.route).pipe(
+      tap(params => {
+        // keep input box and url parameter in sync, otherwise input box will be blank if entering search directly in the url
+        // use setTimeout, otherwise angular will give ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.searchTerm = params.searchterm;
+        });
+      }),
+      switchMap(params => {
+        const searchTerm = params.searchterm;
+        return this.searchService.getAll({ query: searchTerm });
+      }));
   }
 
   search(term: string): void {
-    this.searchTerms.next(term);
+    this.searchTerm$.next(term);
   }
 
   isMovie(item: SearchResultItem): boolean {
