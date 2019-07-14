@@ -30,7 +30,7 @@ export class ListComponent implements OnInit {
   }
 
   toggleWatch(id: number, watched: boolean) {
-    this.listsService.updateItemWatchedState(this.getListName(), id, this.type, watched).subscribe(
+    this.listsService.updateItemWatchedState(id, this.type, watched).subscribe(
       _success => {
         // do what?
       },

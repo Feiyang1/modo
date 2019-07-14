@@ -3,9 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TmdbHttpClientService } from './tmdb-http-client.service';
-import { validateEventsArray } from '@angular/fire/firestore';
 
-// TODO: pagination
 @Injectable({
   providedIn: 'root'
 })

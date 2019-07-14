@@ -111,10 +111,10 @@ export class ListsService {
   }
 
   // TODO: watch a season/episode of a TV series
-  updateItemWatchedState(listName: string, itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {
+  updateItemWatchedState( itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {
     console.log('update movie watched')
-    let docPath = '';
     const arrayName = todoArrayName(itemType);
+
     return this.afAuth.user.pipe(
       switchMap(user => {
         if (!user) {
@@ -123,33 +123,30 @@ export class ListsService {
 
         return of(user);
       }),
-      switchMap((user) => {
-        docPath = `users/${user.uid}/lists/${listName}`;
-        return this.firestore.doc(docPath).get();
-      }),
-      switchMap(snapshot => {
-        if (!snapshot.exists) {
-          return throwError(`List ${listName} doesn't exist`);
-        }
-
-        const data: ToDoList = snapshot.data() as ToDoList;
-        const item: ToDoMovie | ToDoTv
-          = data[arrayName] && Array.prototype.find.call(data[arrayName], item => item.id === itemId); // typescript can't handle data[arrayName].filter(..)
-
-        if (!item) {
-          return throwError(`${itemType} ${itemId} doesn't exist in list ${listName}`);
-        }
-
-        item.watched = watched;
-        item.watched_time = Date.now();
-
-        return of(data[arrayName]);
-      }),
-      switchMap(updatedItems =>
-        from(this.firestore.doc(docPath).update({
-          [arrayName]: updatedItems
-        }))
+      switchMap(user =>
+        this.firestore.collection(`users/${user.uid}/lists`).get()
       ),
+      switchMap(querySnapshot => {
+        const batch = this.firestore.firestore.batch();
+        querySnapshot.forEach(result => {
+          const list = result.data() as ToDoList;
+          const item: ToDoMovie | ToDoTv = (list[arrayName] as any[]).find(item => item.id === itemId);
+
+          // list doesn't have the movie
+          if (!item) {
+            return;
+          }
+
+          item.watched = watched;
+          item.watched_time = Date.now();
+
+          batch.update(result.ref, {
+            [arrayName]: list[arrayName]
+          });
+        });
+
+        return from(batch.commit());
+      }),
       map(_ => true)
     );
   }

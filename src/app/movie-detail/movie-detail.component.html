@@ -1,5 +1,5 @@
 <div *ngIf="movie$ | async as movie">
-  <div>Detail for {{movie.title}}</div>
+  <div>Movie: {{movie.title}}</div>
   <div>{{movie.release_date}}</div>
   <div *ngIf="movie.homepage">{{movie.homepage}}</div>
   <div>{{movie.overview}}</div>

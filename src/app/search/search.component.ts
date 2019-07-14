@@ -21,7 +21,6 @@ export class SearchComponent implements OnInit {
     private searchService: SearchService
   ) { }
 
-  // TODO: render movie, tv, person differently
   ngOnInit() {
 
     // subscribe search text update
@@ -31,7 +30,7 @@ export class SearchComponent implements OnInit {
       this.router.navigate([`/search/${searchTerm}`])
     });
 
-    // subscribe to url param (search term) and page number update
+    // subscribe to url param (search term) update
     routeParams$(this.route).pipe(
       tap(params => {
         // keep input box and url parameter in sync, otherwise input box will be blank if entering search directly in the url
