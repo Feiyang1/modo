@@ -7,7 +7,7 @@ import { firestore } from 'firebase/app';
 import { ItemType } from './search.service';
 import { todoArrayName } from './util';
 
-// TODO: rewrite "check, then write" operations with transactions, delete a list, pagination
+// TODO: delete a list, pagination
 @Injectable({
   providedIn: 'root'
 })
@@ -62,26 +62,38 @@ export class ListsService {
 
   addToList(listName: string, item: ToDoMovie | ToDoTv, itemType: ItemType): Observable<boolean> {
 
-    return this.afAuth.user.pipe(switchMap(user => {
-      if (!user) {
-        return throwError('not logged in');
-      }
-
-      const docPath = `users/${user.uid}/lists/${listName}`;
-      const arrayName = todoArrayName(itemType);
-      return this.listExists(user.uid, listName).pipe(switchMap(exists => {
-        if (!exists) {
-          return throwError('list does not exist');
+    return this.afAuth.user.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError('not logged in');
         }
-        // TODO: check if movie already exists using transaction
-        return from(this.firestore.doc(docPath).update({
-          [arrayName]: firestore.FieldValue.arrayUnion({
-            ...item,
-            watched: false
-          })
-        })).pipe(map(_ => true));
-      }));
-    }));
+
+        const docRef = this.firestore.firestore.doc(`users/${user.uid}/lists/${listName}`);
+        const arrayName = todoArrayName(itemType);
+
+
+        return from(this.firestore.firestore.runTransaction(async transaction => {
+
+          const doc = await transaction.get(docRef);
+          if (!doc.exists) {
+            throw Error('list does not exist');
+          }
+          type a = typeof list[typeof arrayName]
+          const list = doc.data() as ToDoList;
+          if ((list[arrayName] as any[]).findIndex(it => it.id === item.id) !== -1) {
+            throw Error(`Movie already exists in list ${listName}`);
+          }
+
+          transaction.update(docRef, {
+            [arrayName]: firestore.FieldValue.arrayUnion({
+              ...item,
+              watched: false
+            })
+          });
+        }));
+      }),
+      map(_ => true)
+    );
   }
 
   addList(name: string): Observable<boolean> {
@@ -92,26 +104,32 @@ export class ListsService {
       tvs: []
     };
 
-    return this.afAuth.user.pipe(switchMap(user => {
-      if (!user) {
-        return throwError('not logged in');
-      }
-
-      const docPath = `users/${user.uid}/lists/${name}`;
-      return this.listExists(user.uid, name).pipe(switchMap(exists => {
-        if (exists) {
-          return throwError(`List ${name} already exists`);
+    return this.afAuth.user.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError('not logged in');
         }
 
-        return from(this.firestore.doc(docPath).set(newList)).pipe(map(_ => {
-          return true;
-        }));
-      }))
-    }));
+        const docRef = this.firestore.firestore.doc(`users/${user.uid}/lists/${name}`);
+
+        return from(
+          this.firestore.firestore.runTransaction(async transaction => {
+            const doc = await transaction.get(docRef);
+
+            if (doc.exists) {
+              throw Error(`List ${name} already exists`);
+            }
+            transaction.set(docRef, newList);
+          })
+        );
+      }),
+      map(_ => true)
+    );
   }
 
+  // Not using transaction
   // TODO: watch a season/episode of a TV series
-  updateItemWatchedState( itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {
+  updateItemWatchedState(itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {
     console.log('update movie watched')
     const arrayName = todoArrayName(itemType);
 
@@ -151,9 +169,7 @@ export class ListsService {
     );
   }
 
-  // TODO: implement deleting TV
   deleteItem(listName: string, itemId: number, itemType: ItemType): Observable<boolean> {
-    let docPath = '';
     const arrayName = todoArrayName(itemType);
     return this.afAuth.user.pipe(
       switchMap(user => {
@@ -164,26 +180,27 @@ export class ListsService {
         return of(user);
       }),
       switchMap(user => {
-        docPath = `users/${user.uid}/lists/${listName}`;
-        return this.firestore.doc(docPath).get();
-      }),
-      switchMap(snapshot => {
-        if (!snapshot.exists) {
-          return throwError(`List ${listName} doesn't exist`);
-        }
+        const docRef = this.firestore.firestore.doc(`users/${user.uid}/lists/${listName}`);
+        return from(
+          this.firestore.firestore.runTransaction(async transaction => {
+            const doc = await transaction.get(docRef);
+            if (!doc.exists) {
+              throw Error(`List ${listName} doesn't exist`);
+            }
 
-        const data: ToDoList = snapshot.data() as ToDoList;
-        const items = data[arrayName] || [];
-        return from(this.firestore.doc(docPath).update({
-          [arrayName]: Array.prototype.filter.call(items, m => m.id !== itemId)
-        }));
+            const data = doc.data() as ToDoList;
+            const items = data[arrayName] || [];
+
+            transaction.update(
+              docRef,
+              {
+                [arrayName]: Array.prototype.filter.call(items, m => m.id !== itemId)
+              }
+            )
+          }));
       }),
       map(_ => true)
     );
-  }
-
-  private listExists(uid: string, listName: string): Observable<boolean> {
-    return this.firestore.doc(`users/${uid}/lists/${listName}`).get().pipe(map(doc => doc.exists));
   }
 }
 
