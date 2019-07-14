@@ -127,6 +127,20 @@ export class ListsService {
     );
   }
 
+  deleteList(name: string): Observable<boolean> {
+    return this.afAuth.user.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError('not logged in');
+        }
+        const docPath = `users/${user.uid}/lists/${name}`;
+
+        return from(this.firestore.doc(docPath).delete());
+      }),
+      map(_ => true)
+    );
+  }
+
   // Not using transaction
   // TODO: watch a season/episode of a TV series
   updateItemWatchedState(itemId: number, itemType: ItemType, watched: boolean): Observable<boolean> {

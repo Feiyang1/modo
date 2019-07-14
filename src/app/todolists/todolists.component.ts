@@ -10,9 +10,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TodolistsComponent implements OnInit {
   lists$: Observable<ToDoList[]>;
-  constructor(private listsService: ListsService, public route: ActivatedRoute) { }
+  constructor(private listsService: ListsService, private route: ActivatedRoute) { }
   
   ngOnInit() {
     this.lists$ = this.listsService.getLists();
+  }
+
+  isListChildView(): boolean {
+    const childView = this.route.children[0];
+    return childView && childView.snapshot.routeConfig!.path === 'list/:name';
   }
 }

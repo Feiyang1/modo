@@ -1,10 +1,11 @@
-<div *ngIf="route.children.length === 0">
+<div *ngIf="!isListChildView()">
   <div *ngFor="let list of lists$ | async">
     <a routerLink="list/{{list.name}}">
       <div>{{list.name}}</div>
     </a>
     <div>{{list.movies.length}} movies</div>
     <div>{{list.tvs.length}} tvs</div>
+    <a routerLink="deletelist/{{list.name}}">- Delete</a>
   </div>
   <a routerLink="addlist">
     + add new list

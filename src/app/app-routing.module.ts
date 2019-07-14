@@ -9,6 +9,7 @@ import { AddToListComponent } from './add-to-list/add-to-list.component';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
 import { ItemType } from './search.service';
+import { DeleteListComponent } from './delete-list/delete-list.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
       {
         path: 'addlist',
         component: AddlistComponent
+      },
+      {
+        path: 'deletelist/:name',
+        component: DeleteListComponent
       }
     ]
   },

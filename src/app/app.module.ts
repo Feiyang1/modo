@@ -20,6 +20,7 @@ import { TvDetailComponent } from './tv-detail/tv-detail.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './route-reuse-strategy';
 import { PaginationComponent } from './pagination/pagination.component';
+import { DeleteListComponent } from './delete-list/delete-list.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { PaginationComponent } from './pagination/pagination.component';
     ListContainerComponent,
     TvDetailComponent,
     PaginationComponent,
+    DeleteListComponent,
   ],
   imports: [
     BrowserModule,
