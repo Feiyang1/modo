@@ -11,9 +11,9 @@ import { routeParams$ } from '../util';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
-  private searchResult: SearchResult;
+  searchResult: SearchResult;
+  searchTerm = '';
   private searchTerm$ = new Subject<string>();
-  private searchTerm = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -56,7 +56,7 @@ export class SearchComponent implements OnInit {
   }
 
   goToPage(page: number): void {
-    this.searchService.getAll({ query: this.searchTerm, page}).subscribe(result => {
+    this.searchService.getAll({ query: this.searchTerm, page }).subscribe(result => {
       this.searchResult = result;
     });
   }

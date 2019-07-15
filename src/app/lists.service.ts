@@ -135,9 +135,19 @@ export class ListsService {
         }
         const docPath = `users/${user.uid}/lists/${name}`;
 
-        return from(this.firestore.doc(docPath).delete());
-      }),
-      map(_ => true)
+        // Firestore write promises don't resolve until they hit the server.
+        // For offline to work correctly, we are not waiting for the promise to resolve before returning the control
+        this.firestore.doc(docPath).delete().then(
+          (_res) => {
+            // no op
+          },
+          (err) => {
+            console.log('delete failed to server', err)
+          }
+        );
+
+        return of(true);
+      })
     );
   }
 

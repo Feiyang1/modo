@@ -50,12 +50,7 @@ export class SearchService {
 
   getAll(options: SearchOptions): Observable<SearchResult> {
     if (!options.query) {
-      return of({
-        page: 1,
-        total_pages: 1,
-        total_results: 1,
-        results: []
-      });
+      return of(GET_ALL_EMPTY_RESPONSE);
     }
 
     const params = new HttpParams({
@@ -89,13 +84,14 @@ export class SearchService {
           };
         });
         return value as SearchResult;
-      })
+      }),
+      catchError(this.handleError('getAll', GET_ALL_EMPTY_RESPONSE))
     );
   }
 
-  handleError(operation: string, result: unknown)
-    : (error: unknown) => Observable<unknown> {
-    return (error: unknown): Observable<unknown> => {
+  handleError<T>(operation: string, result: T)
+    : (error: unknown) => Observable<T> {
+    return (error: unknown): Observable<T> => {
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
       // Let the app keep running by returning an empty result.
@@ -103,6 +99,13 @@ export class SearchService {
     };
   }
 }
+
+const GET_ALL_EMPTY_RESPONSE = {
+  page: 1,
+  total_pages: 1,
+  total_results: 0,
+  results: []
+};
 
 interface SearchOptions {
   query: string;

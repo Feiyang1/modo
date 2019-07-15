@@ -21,6 +21,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from './route-reuse-strategy';
 import { PaginationComponent } from './pagination/pagination.component';
 import { DeleteListComponent } from './delete-list/delete-list.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { DeleteListComponent } from './delete-list/delete-list.component';
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule.enablePersistence(),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true })
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
