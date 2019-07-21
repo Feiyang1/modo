@@ -38,7 +38,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     DeleteListComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
