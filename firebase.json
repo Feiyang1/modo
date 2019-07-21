@@ -4,11 +4,22 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "dist/modo",
+    "public": "dist", // the folder location doesn't matter because all traffics are routed to functions. Make sure there is no index.html in the folder otherwise SSR in server.js won't trigger
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "angularUniversalFunction"
+      }
+    ]
+  },
+  "functions": {
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint"
     ]
   }
 }

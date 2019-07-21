@@ -46,8 +46,8 @@ app.get('*', (req, res) => {
   res.render('index', { req });
 });
 
-// Start up the Node server
-app.listen(PORT, () => {
-  console.log(`Node Express server listening on http://localhost:${PORT}`);
-});
+// Start up the Node server, commented out for firebase
+// app.listen(PORT, () => {
+//   console.log(`Node Express server listening on http://localhost:${PORT}`);
+// });
 
