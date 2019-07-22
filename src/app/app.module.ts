@@ -22,6 +22,8 @@ import { CustomReuseStrategy } from './route-reuse-strategy';
 import { PaginationComponent } from './pagination/pagination.component';
 import { DeleteListComponent } from './delete-list/delete-list.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomMaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule.enablePersistence(),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true }),
+    BrowserAnimationsModule,
+    CustomMaterialModule
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

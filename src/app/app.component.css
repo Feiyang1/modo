@@ -1,3 +1,11 @@
-.tab {
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.content {
     margin: 5px;
+}
+
+::ng-deep .mat-button-toggle-label-content{
+    line-height:24px !important;
 }

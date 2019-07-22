@@ -1,20 +1,25 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-</div>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Welcome to {{ title }}!</span>
+    <span class="toolbar-spacer"></span>
+    <div *ngIf="user$ | async">
+      <button mat-button [matMenuTriggerFor]="menu">{{(user$ | async)?.displayName}}</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="logout()">Sign out</button>
+      </mat-menu>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
 <ng-template #showLogin>
-  <p>Please log in</p>
-  <button (click)="login()">Login with Google</button>
+  <button mat-button (click)="login()">Login with Google</button>
 </ng-template>
 <div *ngIf="user$ | async; else showLogin">
-  <div>{{(user$ | async)?.displayName}}</div>
-  <nav>
-    <a routerLink="mylists" class="tab">My Lists</a>
-    <a [routerLink]="searchUrl()" class="tab">Search</a>
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link routerLink="mylists" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">My Lists</a>
+    <a mat-tab-link [routerLink]="searchUrl()" routerLinkActive #rla2="routerLinkActive"
+      [active]="rla2.isActive">Search</a>
   </nav>
-  <button (click)="logout()">Logout</button>
-  <router-outlet></router-outlet>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </div>
-

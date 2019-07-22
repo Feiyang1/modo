@@ -1,7 +1,9 @@
 <div>
-  <nav>
-    <a routerLink="movies" class="tab">Movies</a>
-    <a routerLink="tvs" class="tab">Tvs</a>
-  </nav>
+  <mat-button-toggle-group name="listType" aria-label="List Type">
+    <mat-button-toggle value="movies" routerLink="movies" routerLinkActive #rla1="routerLinkActive"
+      [checked]="rla1.isActive">Movies</mat-button-toggle>
+    <mat-button-toggle value="tvs" routerLink="tvs" routerLinkActive #rla2="routerLinkActive" [checked]="rla2.isActive">
+      Tvs</mat-button-toggle>
+  </mat-button-toggle-group>
   <router-outlet></router-outlet>
 </div>
