@@ -1,23 +1,21 @@
-<input #searchBox id="search-box" [ngModel]="searchTerm" (input)="search(searchBox.value)" />
-<ul>
-  <li *ngFor="let item of searchResult?.results">
-    <div *ngIf="isMovie(item); else tv">
-      <a routerLink="/movie/{{item.result.id}}">
-        <div>{{item.result.title}}</div>
-        <div>{{item.result.release_date}}</div>
-        <div>Movie</div>
-      </a>
+<mat-form-field class="search">
+  <input matInput #searchBox [ngModel]="searchTerm" (input)="search(searchBox.value)"
+    placeholder="Movie or Tv name" />
+</mat-form-field>
+<div class="list">
+  <div *ngFor="let item of searchResult?.results">
+    <div class="result-container" matRipple routerLink="/movie/{{item.result.id}}" *ngIf="isMovie(item); else tv">
+      <div>{{item.result.title}} - {{item.result.release_date}}</div>
+      <div>Movie</div>
     </div>
-
     <ng-template #tv>
-      <a routerLink="/tv/{{item.result.id}}">
-        <div>{{item.result.name}}</div>
-        <div>{{item.result.first_air_date}}</div>
+      <div class="result-container" matRipple routerLink="/tv/{{item.result.id}}">
+        <div>{{item.result.name}} - {{item.result.first_air_date}}</div>
         <div>TV</div>
-      </a>
+      </div>
     </ng-template>
-  </li>
-</ul>
-<app-pagination [page]="searchResult?.page" [totalPages]="searchResult?.total_pages" [totalCount]="searchResult?.total_results"
-  [countPerPage]="20" (goPage)="goToPage($event)">
+  </div>
+</div>
+<app-pagination [page]="searchResult?.page" [totalPages]="searchResult?.total_pages"
+  [totalCount]="searchResult?.total_results" [countPerPage]="20" (goPage)="goToPage($event)">
 </app-pagination>

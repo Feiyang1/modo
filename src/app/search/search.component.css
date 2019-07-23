@@ -1,6 +1,19 @@
-.search-box {
-    height: 30px;
+
+.search, .list {
+    padding: 0 16px;
+}
+
+.result-container {
     width: 100%;
-    line-height: 30px;
-    border: 1px solid black;
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+    justify-content: flex-start;
+    cursor: pointer;
+    border-bottom: 1px solid black;
+    padding: 5px 0;
+}
+
+.result-container:hover {
+    background: rgba(0,0,0,.03)
 }
