@@ -1,16 +1,11 @@
-<div class="add-to-list-dialog">
-  <p>
-    add-to-list works!
-  </p>
-  <select  #list>
+<h1 mat-dialog-title>Add To List</h1>
+<div mat-dialog-content>
+  <select #list>
     <option *ngFor="let list of lists$ | async" [value]="list.name">{{list.name}}</option>
   </select>
-  <div (click)="add(list.value)">
-    Add
-  </div>
-  <div (click)="cancel()">
-    Cancel
-  </div>
-  <div class="error" *ngIf="error">{{error}}</div>
 </div>
-
+<div mat-dialog-actions>
+  <button mat-button (click)="add(list.value)">Add</button>
+  <button mat-button (click)="cancel()">Cancel</button>
+</div>
+<div class="error" *ngIf="error">{{error}}</div>

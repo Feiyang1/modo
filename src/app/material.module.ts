@@ -7,11 +7,12 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatRippleModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     imports: [MatTabsModule, MatToolbarModule, MatMenuModule, MatButtonModule, MatButtonToggleModule, MatInputModule, MatListModule,
-        MatRippleModule],
+        MatRippleModule, MatDialogModule],
     exports: [MatTabsModule, MatToolbarModule, MatMenuModule, MatButtonModule, MatButtonToggleModule, MatInputModule, MatListModule,
-        MatRippleModule],
+        MatRippleModule, MatDialogModule],
 })
 export class CustomMaterialModule { }
