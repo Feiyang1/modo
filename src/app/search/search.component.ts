@@ -20,6 +20,10 @@ export class SearchComponent implements OnInit {
   // do not send searching request if a search is in flight
   // only for infinite scroll
   private isSearching: boolean;
+  // this component is cached by route-reuse-strategy
+  // remember the scroll position and restore it when navigating back to the search screen
+  // we have to do it manually because the scrollbar goes to the top when the component is reattached.
+  private scrollPosition: number;
 
 
   @ViewChild(CdkVirtualScrollViewport)
@@ -84,6 +88,7 @@ export class SearchComponent implements OnInit {
 
   scrollIndexChanged(currentIndex: number): void {
     const end = this.viewport.getRenderedRange().end;
+    this.scrollPosition = currentIndex;
 
     // load nextPage after virtual scrolling has rendered the last data point
     if (end !== 0 && end === this.infiniteResult.length) {
@@ -98,6 +103,12 @@ export class SearchComponent implements OnInit {
       this.infiniteResult = [...this.infiniteResult, ...result.results];
       this.isSearching = false;
     });
+  }
+
+  // hook called when route-reuse-strategy re-attaches the component
+  onAttach(){
+    // scroll to the previous scroll position
+    this.viewport.scrollToIndex(this.scrollPosition);
   }
 
 }

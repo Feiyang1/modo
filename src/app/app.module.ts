@@ -24,7 +24,8 @@ import { DeleteListComponent } from './delete-list/delete-list.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './material.module';
-import { ScrollingModule } from '@angular/cdk/scrolling'
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MyRouterOutletDirective } from './my-router-outlet.directive'
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling'
     TvDetailComponent,
     PaginationComponent,
     DeleteListComponent,
+    MyRouterOutletDirective,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
