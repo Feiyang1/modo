@@ -24,6 +24,7 @@ import { DeleteListComponent } from './delete-list/delete-list.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './material.module';
+import { ScrollingModule } from '@angular/cdk/scrolling'
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { CustomMaterialModule } from './material.module';
     AngularFirestoreModule.enablePersistence(),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true }),
     BrowserAnimationsModule,
-    CustomMaterialModule
+    CustomMaterialModule,
+    ScrollingModule
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }

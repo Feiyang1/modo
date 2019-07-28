@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SearchService, SearchResultItem, ItemType, SearchResult } from '../search.service';
-import { Subject, Observable, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, tap, startWith } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap, tap, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { routeParams$ } from '../util';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-search',
@@ -11,9 +12,18 @@ import { routeParams$ } from '../util';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+  infiniteResult: SearchResultItem[] = [];
   searchResult: SearchResult;
   searchTerm = '';
   private searchTerm$ = new Subject<string>();
+  private loadNextPage$ = new Subject<boolean>();
+  // do not send searching request if a search is in flight
+  // only for infinite scroll
+  private isSearching: boolean;
+
+
+  @ViewChild(CdkVirtualScrollViewport)
+  viewport: CdkVirtualScrollViewport;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +40,22 @@ export class SearchComponent implements OnInit {
       this.router.navigate([`/search/${searchTerm}`])
     });
 
+    this.loadNextPage$.pipe(
+      throttleTime(1000)
+    ).subscribe(() => {
+      // request is already in flight
+      if (this.isSearching) {
+        return;
+      }
+
+      const nextPage = this.searchResult.page + 1;
+      if (nextPage > this.searchResult.total_pages) {
+        return;
+      }
+
+      this.loadPage(nextPage);
+    });
+
     // subscribe to url param (search term) update
     routeParams$(this.route).pipe(
       tap(params => {
@@ -44,6 +70,7 @@ export class SearchComponent implements OnInit {
         return this.searchService.getAll({ query: searchTerm });
       })).subscribe(result => {
         this.searchResult = result;
+        this.infiniteResult = [...this.infiniteResult, ...result.results];
       });
   }
 
@@ -55,9 +82,21 @@ export class SearchComponent implements OnInit {
     return item.type === ItemType.MOVIE;
   }
 
-  goToPage(page: number): void {
+  scrollIndexChanged(currentIndex: number): void {
+    const end = this.viewport.getRenderedRange().end;
+
+    // load nextPage after virtual scrolling has rendered the last data point
+    if (end !== 0 && end === this.infiniteResult.length) {
+      this.loadNextPage$.next(true);
+    }
+  }
+
+  loadPage(page: number): void {
+    this.isSearching = true;
     this.searchService.getAll({ query: this.searchTerm, page }).subscribe(result => {
       this.searchResult = result;
+      this.infiniteResult = [...this.infiniteResult, ...result.results];
+      this.isSearching = false;
     });
   }
 
