@@ -74,7 +74,7 @@ export class SearchComponent implements OnInit {
         return this.searchService.getAll({ query: searchTerm });
       })).subscribe(result => {
         this.searchResult = result;
-        this.infiniteResult = [...this.infiniteResult, ...result.results];
+        this.infiniteResult = result.results;
       });
   }
 

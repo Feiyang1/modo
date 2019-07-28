@@ -21,6 +21,8 @@
 .app .content .tab-content {
     flex: 1 1 auto;
     margin: 5px 0;
+    display: flex;
+    flex-flow: column;
 }
 
 .toolbar-spacer {

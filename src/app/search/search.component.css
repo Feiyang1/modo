@@ -1,7 +1,13 @@
-.search-content {
+:host {
+    flex: 1 1 auto;
     display: flex;
     flex-flow: column;
-    height: 100%;
+}
+
+.search-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column;
     padding: 0 16px;
 }
 
