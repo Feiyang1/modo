@@ -4,14 +4,14 @@
       placeholder="Movie or Tv name" />
   </mat-form-field>
   <cdk-virtual-scroll-viewport itemSize="50" (scrolledIndexChange)="scrollIndexChanged($event)">
-    <div *cdkVirtualFor="let item of infiniteResult; let i = index"  class="result-container">
-      <div matRipple routerLink="/movie/{{item.result.id}}" *ngIf="isMovie(item); else tv">
-        <div>{{i}} - {{item.result.title}} - {{item.result.release_date}}</div>
+    <div *cdkVirtualFor="let item of infiniteResult;">
+      <div matRipple routerLink="/movie/{{item.result.id}}" *ngIf="isMovie(item); else tv" class="result-container">
+        <div>{{item.result.title}} - {{item.result.release_date}}</div>
         <div>Movie</div>
       </div>
       <ng-template #tv>
-        <div matRipple routerLink="/tv/{{item.result.id}}">
-          <div>{{i}} - {{item.result.name}} - {{item.result.first_air_date}}</div>
+        <div matRipple routerLink="/tv/{{item.result.id}}" class="result-container">
+          <div>{{item.result.name}} - {{item.result.first_air_date}}</div>
           <div>TV</div>
         </div>
       </ng-template>
