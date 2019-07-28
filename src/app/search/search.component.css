@@ -1,5 +1,16 @@
-.search, .list {
+.search-content {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
     padding: 0 16px;
+}
+
+cdk-virtual-scroll-viewport {
+    flex: 1 1 auto;
+}
+
+.search-content .searchbox {
+    flex: 0 1 auto;
 }
 
 .result-container {
@@ -17,8 +28,4 @@
 
 .result-container:hover {
     background: rgba(0, 0, 0, .03)
-}
-
-cdk-virtual-scroll-viewport {
-    height: 100vh;
 }

@@ -1,25 +1,28 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>Welcome to {{ title }}!</span>
-    <span class="toolbar-spacer"></span>
-    <div *ngIf="user$ | async">
-      <button mat-button [matMenuTriggerFor]="menu">{{(user$ | async)?.displayName}}</button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="logout()">Sign out</button>
-      </mat-menu>
+<div class="app">
+  <mat-toolbar color="primary" class="header">
+    <mat-toolbar-row>
+      <span>Welcome to {{ title }}!</span>
+      <span class="toolbar-spacer"></span>
+      <div *ngIf="user$ | async">
+        <button mat-button [matMenuTriggerFor]="menu">{{(user$ | async)?.displayName}}</button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="logout()">Sign out</button>
+        </mat-menu>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <ng-template #showLogin>
+    <button mat-button (click)="login()">Login with Google</button>
+  </ng-template>
+  <div *ngIf="user$ | async; else showLogin" class="content">
+    <nav mat-tab-nav-bar class="tabs">
+      <a mat-tab-link routerLink="mylists" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">My
+        Lists</a>
+      <a mat-tab-link [routerLink]="searchUrl()" routerLinkActive #rla2="routerLinkActive"
+        [active]="rla2.isActive">Search</a>
+    </nav>
+    <div class="tab-content">
+      <router-outlet></router-outlet>
     </div>
-  </mat-toolbar-row>
-</mat-toolbar>
-<ng-template #showLogin>
-  <button mat-button (click)="login()">Login with Google</button>
-</ng-template>
-<div *ngIf="user$ | async; else showLogin">
-  <nav mat-tab-nav-bar>
-    <a mat-tab-link routerLink="mylists" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">My Lists</a>
-    <a mat-tab-link [routerLink]="searchUrl()" routerLinkActive #rla2="routerLinkActive"
-      [active]="rla2.isActive">Search</a>
-  </nav>
-  <div class="content">
-    <router-outlet></router-outlet>
   </div>
 </div>

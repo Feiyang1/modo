@@ -1,21 +1,20 @@
-<mat-form-field class="search">
-  <input matInput #searchBox [ngModel]="searchTerm" (input)="search(searchBox.value)"
-    placeholder="Movie or Tv name" />
-</mat-form-field>
-<cdk-virtual-scroll-viewport itemSize="50" (scrolledIndexChange)="scrollIndexChanged($event)">
-  <div *cdkVirtualFor="let item of infiniteResult; let i = index" class="result-container">
-    <div  matRipple routerLink="/movie/{{item.result.id}}" *ngIf="isMovie(item); else tv">
-      <div>{{i}} - {{item.result.title}} - {{item.result.release_date}}</div>
-      <div>Movie</div>
-    </div>
-    <ng-template #tv>
-      <div matRipple routerLink="/tv/{{item.result.id}}">
-        <div>{{i}} - {{item.result.name}} - {{item.result.first_air_date}}</div>
-        <div>TV</div>
+<div class="search-content">
+  <mat-form-field class="searchbox">
+    <input matInput #searchBox [ngModel]="searchTerm" (input)="search(searchBox.value)"
+      placeholder="Movie or Tv name" />
+  </mat-form-field>
+  <cdk-virtual-scroll-viewport itemSize="50" (scrolledIndexChange)="scrollIndexChanged($event)">
+    <div *cdkVirtualFor="let item of infiniteResult; let i = index"  class="result-container">
+      <div matRipple routerLink="/movie/{{item.result.id}}" *ngIf="isMovie(item); else tv">
+        <div>{{i}} - {{item.result.title}} - {{item.result.release_date}}</div>
+        <div>Movie</div>
       </div>
-    </ng-template>
-  </div>
-</cdk-virtual-scroll-viewport>
-<!-- <app-pagination [page]="searchResult?.page" [totalPages]="searchResult?.total_pages"
-  [totalCount]="searchResult?.total_results" [countPerPage]="20" (goPage)="goToPage($event)">
-</app-pagination> -->
+      <ng-template #tv>
+        <div matRipple routerLink="/tv/{{item.result.id}}">
+          <div>{{i}} - {{item.result.name}} - {{item.result.first_air_date}}</div>
+          <div>TV</div>
+        </div>
+      </ng-template>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>
