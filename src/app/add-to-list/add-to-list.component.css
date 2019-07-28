@@ -1,3 +1,7 @@
 .error {
     color: red;
 }
+
+.action-row {
+    justify-content: space-between;
+}

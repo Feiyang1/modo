@@ -54,8 +54,9 @@ export class AddToListComponent implements OnInit {
   styleUrls: ['./add-to-list.component.css']
 })
 export class AddToListDialogComponent {
-  lists$: Observable<ToDoList[]>;
+  lists: ToDoList[];
   error: string | null = null
+  selected: string;
   constructor(
     private movieService: MovieService,
     private tvService: TvService,
@@ -65,7 +66,10 @@ export class AddToListDialogComponent {
   ) { }
 
   ngOnInit() {
-    this.lists$ = this.listsService.getLists()
+    this.listsService.getLists().subscribe((lists) => {
+      this.lists = lists;
+      this.selected = lists[0] && lists[0].name;
+    })
   }
 
   add(listName: string) {

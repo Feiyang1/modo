@@ -1,11 +1,11 @@
-<h1 mat-dialog-title>Add To List</h1>
+<h1 mat-dialog-title>Add To List {{selected}}</h1>
 <div mat-dialog-content>
-  <select #list>
-    <option *ngFor="let list of lists$ | async" [value]="list.name">{{list.name}}</option>
-  </select>
+  <mat-select [(value)]="selected">
+    <mat-option *ngFor="let list of lists" [value]="list.name">{{list.name}}</mat-option>
+  </mat-select>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="add(list.value)">Add</button>
-  <button mat-button (click)="cancel()">Cancel</button>
+<div mat-dialog-actions class="action-row">
+  <button mat-stroked-button (click)="add(selected)">Add</button>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
 </div>
 <div class="error" *ngIf="error">{{error}}</div>

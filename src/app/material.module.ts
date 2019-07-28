@@ -8,11 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({
     imports: [MatTabsModule, MatToolbarModule, MatMenuModule, MatButtonModule, MatButtonToggleModule, MatInputModule, MatListModule,
-        MatRippleModule, MatDialogModule],
+        MatRippleModule, MatDialogModule, MatSelectModule],
     exports: [MatTabsModule, MatToolbarModule, MatMenuModule, MatButtonModule, MatButtonToggleModule, MatInputModule, MatListModule,
-        MatRippleModule, MatDialogModule],
+        MatRippleModule, MatDialogModule, MatSelectModule],
 })
 export class CustomMaterialModule { }
