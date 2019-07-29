@@ -11,12 +11,18 @@
     flex: 1 1 auto;
 }
 
+.tv-title {
+    
+}
+
 .tv-detail {
     display: flex;
     flex-flow: column;
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
 }
 
 .line-item {
