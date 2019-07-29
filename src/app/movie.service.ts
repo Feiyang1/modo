@@ -23,6 +23,7 @@ export interface MovieDetail {
   id: number; // tmdb id
   imdb_id: string;
   title: string;
+  poster_path: string;
   overview: string;
   release_date: string;
   homepage?: string;

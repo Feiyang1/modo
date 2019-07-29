@@ -1,8 +1,26 @@
-<div *ngIf="movie$ | async as movie">
-  <div>Movie: {{movie.title}}</div>
-  <div>{{movie.release_date}}</div>
-  <div *ngIf="movie.homepage">{{movie.homepage}}</div>
-  <div>{{movie.overview}}</div>
-  <a routerLink="addtolist">+ Add to list</a>
-</div>
-<router-outlet></router-outlet>
+
+<div *ngIf="movie$ | async as movie" class="movie-container">
+    <div class="movie-title line-item">Movie: {{movie.title}}</div>
+    <div class="movie-detail">
+      <div class="line-item poster-container">
+        <img class="poster" [src]="posterPath(movie)">
+      </div>
+      <mat-divider></mat-divider>
+      <div class="line-item actions">
+        <button mat-button routerLink="addtolist" class="add-to-list-button">+</button>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="line-item">{{movie.overview}}</div>
+      <mat-divider></mat-divider>
+      <div class="line-item" *ngIf="movie.homepage">
+        <a href="{{movie.homepage}}">Homepage</a>
+      </div>
+      <mat-divider *ngIf="movie.homepage"></mat-divider>
+      <div class="line-item">
+        <div>Release Date</div>
+        <div>{{movie.release_date}}</div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
