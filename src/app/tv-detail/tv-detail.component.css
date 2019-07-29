@@ -1,0 +1,44 @@
+:host {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+}
+
+.tv-container {
+    display: flex;
+    flex-flow: column;
+    min-height: 0;
+    flex: 1 1 auto;
+}
+
+.tv-detail {
+    display: flex;
+    flex-flow: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: scroll;
+}
+
+.line-item {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+
+.line-item.actions {
+    padding: 0;
+}
+
+.line-item .add-to-list-button {
+    width: 100%;
+}
+
+.line-item.poster-container {
+    padding: 0;
+}
+
+.line-item .poster {
+    width: 100%;
+}

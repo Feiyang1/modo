@@ -1,25 +1,27 @@
 .app {
     display: flex;
     flex-flow: column;
-    height: 100vh;
+    height: 100%;
 }
 
 .app .header {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
 }
 
 .app .content {
     flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     flex-flow: column;
 }
 
 .app .content .tabs {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
 }
 
 .app .content .tab-content {
     flex: 1 1 auto;
+    min-height: 0;
     margin: 5px 0;
     display: flex;
     flex-flow: column;

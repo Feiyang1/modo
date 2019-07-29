@@ -9,12 +9,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
     imports: [MatTabsModule, MatToolbarModule, MatMenuModule, MatButtonModule, MatButtonToggleModule, MatInputModule, MatListModule,
-        MatRippleModule, MatDialogModule, MatSelectModule],
+        MatRippleModule, MatDialogModule, MatSelectModule, MatDividerModule],
     exports: [MatTabsModule, MatToolbarModule, MatMenuModule, MatButtonModule, MatButtonToggleModule, MatInputModule, MatListModule,
-        MatRippleModule, MatDialogModule, MatSelectModule],
+        MatRippleModule, MatDialogModule, MatSelectModule, MatDividerModule],
 })
 export class CustomMaterialModule { }

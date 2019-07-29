@@ -1,10 +1,30 @@
-<div *ngIf="tv$ | async as tv">
-  <div>TV: {{tv.name}}</div>
-  <div>{{tv.first_air_date}}</div>
-  <div *ngIf="tv.homepage">{{tv.homepage}}</div>
-  <div>{{tv.overview}}</div>
-  <div>Total {{tv.number_of_seasons}} seasons</div>
-  <a routerLink="addtolist">+ Add to list</a>
-  <img [src]="posterPath(tv)">
+<div *ngIf="tv$ | async as tv" class="tv-container">
+  <div class="tv-title line-item">TV: {{tv.name}}</div>
+  <div class="tv-detail">
+    <div class="line-item poster-container">
+      <img class="poster" [src]="posterPath(tv)">
+    </div>
+    <mat-divider></mat-divider>
+    <div class="line-item actions">
+      <button mat-button routerLink="addtolist" class="add-to-list-button">+</button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="line-item">{{tv.overview}}</div>
+    <mat-divider></mat-divider>
+    <div class="line-item" *ngIf="tv.homepage">
+      <a href="{{tv.homepage}}">Homepage</a>
+    </div>
+    <mat-divider *ngIf="tv.homepage"></mat-divider>
+    <div class="line-item">
+      <div>First Air Date</div>
+      <div>{{tv.first_air_date}}</div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="line-item">
+      <div>Number of Seasons</div>
+      <div>{{tv.number_of_seasons}}</div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
 </div>
 <router-outlet></router-outlet>
