@@ -25,7 +25,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './material.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MyRouterOutletDirective } from './my-router-outlet.directive'
+import { MyRouterOutletDirective } from './my-router-outlet.directive';
+import { TodolistsItemComponent } from './todolists-item/todolists-item.component'
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { MyRouterOutletDirective } from './my-router-outlet.directive'
     PaginationComponent,
     DeleteListComponent,
     MyRouterOutletDirective,
+    TodolistsItemComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

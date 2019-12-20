@@ -1,0 +1,12 @@
+<div class="list-container">
+  <div matRipple routerLink="list/{{list.name}}" class="list-summary" (pan)="onPan($event)"
+    [style.width]="listSummaryWidth">
+    <div class="list-name">{{list.name}}</div>
+    <div class="list-items-summary">
+      <div class="movies-count">movies: {{list.movies.length}}</div>
+      <div class="tvs-count">tvs: {{list.tvs.length}}</div>
+    </div>
+  </div>
+  <div routerLink="deletelist/{{list.name}}" class="delete-list">X</div>
+</div>
+<mat-divider></mat-divider>

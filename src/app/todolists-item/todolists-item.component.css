@@ -1,0 +1,33 @@
+.list-summary {
+    flex-grow: 1;
+}
+
+.list-name {
+    font-size: 1.5em;
+    padding-left: 0.2em;
+}
+
+.list-items-summary {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.movies-count, .tvs-count {
+    padding-left: 0.3125em;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+}
+
+.delete-list {
+    display: flex;
+    background-color: red;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+}

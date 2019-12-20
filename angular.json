@@ -6,7 +6,7 @@
     "modo": {
       "root": "",
       "sourceRoot": "src",
-      "projectType": "application",
+      "projectType": "application", 
       "prefix": "app",
       "schematics": {},
       "architect": {
@@ -29,7 +29,7 @@
             ],
             "scripts": [],
             "es5BrowserSupport": true,
-            "serviceWorker": true,
+            "serviceWorker": false,
             "ngswConfigPath": "src/ngsw-config.json"
           },
           "configurations": {
