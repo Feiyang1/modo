@@ -25,6 +25,15 @@
     will-change: scroll-position;
 }
 
+.poster-container {
+    width:100vw;
+   height:60vh;
+}
+
+.poster-container img {
+    object-fit: contain;
+}
+
 .line-item {
     flex-shrink: 0;
     padding: 8px 16px;
