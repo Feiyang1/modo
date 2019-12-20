@@ -17,7 +17,7 @@ export class TodolistsItemComponent implements OnInit {
   }
 
   // TODO swipe to delete
-  private onPan(event) {
+  onPan(event) {
     console.log('panning!', event)
   }
 }
