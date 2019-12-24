@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ListsService } from '../lists.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-addlist',
@@ -10,21 +11,21 @@ import { ListsService } from '../lists.service';
 export class AddlistComponent implements OnInit {
   error: string;
   constructor(
-    private router: Router,
-    private listsService: ListsService
+    private listsService: ListsService,
+    public dialogRef: MatDialogRef<AddlistComponent>
   ) { }
 
   ngOnInit() {
   }
 
   cancel() {
-    this.router.navigate(['']);
+    this.dialogRef.close();
   }
 
   add(listName: string) {
     this.listsService.addList(listName).subscribe(
       _success => {
-        this.router.navigate(['']);
+        this.dialogRef.close();
       },
       error => {
         this.error = error;
@@ -33,33 +34,29 @@ export class AddlistComponent implements OnInit {
 
 }
 
-// class AddlistDialogComponent implements OnInit {
-//   constructor(
-//     public dialog: MatDialog,
-//     private route: ActivatedRoute,
-//     private router: Router
-//   ) { }
+@Component({
+  selector: 'app-addlist-dialog',
+  template: ''
+})
+export class AddlistDialogComponent implements OnInit {
+  constructor(
+    public dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
-//   ngOnInit() {
-//   }
+  ngOnInit() {
+  }
 
-//   ngAfterViewInit() {
-//     const itemId = this.route.parent!.snapshot.paramMap.get('id')!;
-//     const type = this.route.snapshot.data['type']! as ItemType;
-//     // open dialog async, otherwise we will get ExpressionChangedAfterItHasBeenCheckedError
-//     setTimeout(() => {
-//       const dialogRef = this.dialog.open(AddToListDialogComponent, {
-//         data: {
-//           itemId,
-//           type
-//         }
-//       });
+  ngAfterViewInit() {
+    // open dialog async, otherwise we will get ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      const dialogRef = this.dialog.open(AddlistComponent);
+      dialogRef.afterClosed().subscribe(() => this.afterDialogClose());
+    });
+  }
 
-//       dialogRef.afterClosed().subscribe(() => this.afterDialogClose());
-//     });
-//   }
-
-//   private afterDialogClose(): void {
-//     this.router.navigate(['..'], { relativeTo: this.route });
-//   }
-// }
+  private afterDialogClose(): void {
+    this.router.navigate(['..'], { relativeTo: this.route });
+  }
+}

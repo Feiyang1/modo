@@ -13,7 +13,7 @@ interface DialogData {
   type: ItemType;
 }
 @Component({
-  selector: 'app-add-to-list',
+  selector: 'app-add-to-list-dialog',
   template: ''
 })
 export class AddToListDialogComponent implements OnInit {
@@ -49,7 +49,7 @@ export class AddToListDialogComponent implements OnInit {
 }
 
 @Component({
-  selector: 'app-add-to-list-dialog',
+  selector: 'app-add-to-list',
   templateUrl: './add-to-list.component.html',
   styleUrls: ['./add-to-list.component.css']
 })
@@ -61,7 +61,7 @@ export class AddToListComponent {
     private movieService: MovieService,
     private tvService: TvService,
     private listsService: ListsService,
-    public dialogRef: MatDialogRef<AddToListDialogComponent>,
+    public dialogRef: MatDialogRef<AddToListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 

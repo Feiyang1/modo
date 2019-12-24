@@ -4,7 +4,7 @@ import { TodolistsComponent } from './todolists/todolists.component';
 import { SearchComponent } from './search/search.component';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
-import { AddlistComponent } from './addlist/addlist.component';
+import { AddlistComponent, AddlistDialogComponent } from './addlist/addlist.component';
 import { AddToListDialogComponent } from './add-to-list/add-to-list.component';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: 'addlist',
-        component: AddlistComponent
+        component: AddlistDialogComponent
       },
       {
         path: 'deletelist/:name',

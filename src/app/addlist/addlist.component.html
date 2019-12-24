@@ -1,9 +1,9 @@
 <h1 mat-dialog-title>New list</h1>
 <mat-form-field class="example-full-width">
-  <textarea matInput placeholder="List name"></textarea>
+  <input matInput placeholder="List name" #listname />
 </mat-form-field>
 <div mat-dialog-actions class="action-row">
-  <button mat-stroked-button (click)="add(selected)">Add</button>
+  <button mat-stroked-button (click)="add(listname.value)">Add</button>
   <button mat-stroked-button (click)="cancel()">Cancel</button>
 </div>
 <div class="error" *ngIf="error">{{error}}</div>
