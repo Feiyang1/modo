@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
-import { AddToListComponent, AddToListDialogComponent } from './add-to-list/add-to-list.component';
+import { AddToListDialogComponent, AddToListComponent } from './add-to-list/add-to-list.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -58,7 +58,7 @@ import { TodolistsItemComponent } from './todolists-item/todolists-item.componen
     CustomMaterialModule,
     ScrollingModule
   ],
-  entryComponents: [AddToListDialogComponent],
+  entryComponents: [AddToListComponent],
   providers: [
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],

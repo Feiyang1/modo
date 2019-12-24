@@ -5,7 +5,7 @@ import { SearchComponent } from './search/search.component';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
-import { AddToListComponent } from './add-to-list/add-to-list.component';
+import { AddToListDialogComponent } from './add-to-list/add-to-list.component';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
 import { ItemType } from './search.service';
@@ -55,7 +55,7 @@ const routes: Routes = [
     children: [
       {
         path: 'addtolist',
-        component: AddToListComponent,
+        component: AddToListDialogComponent,
         data: {
           type: ItemType.MOVIE
         }
@@ -68,7 +68,7 @@ const routes: Routes = [
     children: [
       {
         path: 'addtolist',
-        component: AddToListComponent,
+        component: AddToListDialogComponent,
         data: {
           type: ItemType.TV
         }

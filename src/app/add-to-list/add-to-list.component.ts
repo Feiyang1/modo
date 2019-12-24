@@ -16,7 +16,7 @@ interface DialogData {
   selector: 'app-add-to-list',
   template: ''
 })
-export class AddToListComponent implements OnInit {
+export class AddToListDialogComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
@@ -32,7 +32,7 @@ export class AddToListComponent implements OnInit {
     const type = this.route.snapshot.data['type']! as ItemType;
     // open dialog async, otherwise we will get ExpressionChangedAfterItHasBeenCheckedError
     setTimeout(() => {
-      const dialogRef = this.dialog.open(AddToListDialogComponent, {
+      const dialogRef = this.dialog.open(AddToListComponent, {
         data: {
           itemId,
           type
@@ -53,7 +53,7 @@ export class AddToListComponent implements OnInit {
   templateUrl: './add-to-list.component.html',
   styleUrls: ['./add-to-list.component.css']
 })
-export class AddToListDialogComponent {
+export class AddToListComponent {
   lists: ToDoList[];
   error: string | null = null
   selected: string;
