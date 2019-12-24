@@ -1,4 +1,4 @@
-<div *ngIf="!isListChildView()">
+<div *ngIf="!isListChildView()" class="todolists-container">
   <div *ngFor="let list of lists$ | async">
     <app-todolists-item [list]="list"></app-todolists-item>
   </div>

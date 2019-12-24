@@ -1,9 +1,18 @@
-<div>
-  <mat-button-toggle-group name="listType" aria-label="List Type">
-    <mat-button-toggle value="movies" routerLink="movies" routerLinkActive #rla1="routerLinkActive"
-      [checked]="rla1.isActive">Movies</mat-button-toggle>
-    <mat-button-toggle value="tvs" routerLink="tvs" routerLinkActive #rla2="routerLinkActive" [checked]="rla2.isActive">
-      Tvs</mat-button-toggle>
-  </mat-button-toggle-group>
+<div class="list-container">
+  <div class="filters">
+    <div class="list-type-filter">
+      <mat-button-toggle-group name="listType" [value]="listType" aria-label="List Type" (change)="onListTypeChange($event)">
+        <mat-button-toggle value="movies">Movies</mat-button-toggle>
+        <mat-button-toggle value="tvs">Tvs</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="status-filter">
+      <mat-button-toggle-group name="status" [value]="visibility" aria-label="status" (change)="onVisibilityChange($event)">
+        <mat-button-toggle value="all">All</mat-button-toggle>
+        <mat-button-toggle value="watched">Watched</mat-button-toggle>
+        <mat-button-toggle value="unwatched">Unwatched</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
   <router-outlet></router-outlet>
 </div>

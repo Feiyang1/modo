@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ListsService, ToDoList } from '../lists.service';
+import { ListsService, ToDoList, ToDoMovie, ToDoTv } from '../lists.service';
 import { Observable } from 'rxjs';
 import { routeParams$, routeParams } from '../util';
 import { ItemType } from '../search.service';
+import { map } from 'rxjs/operators';
+import { Visibility } from '../list-container/list-container.misc';
 
 // TV list or Movie list
 @Component({
@@ -23,13 +25,25 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     // subscribe to params change
     routeParams$(this.route).subscribe(params => {
-      const name = params.name;
-      this.type = params.type === 'movies' ? ItemType.MOVIE : ItemType.TV;
-      this.list$ = this.listsService.getList(name);
+      const { name, type, visibility } = params;
+      this.type = type === 'movies' ? ItemType.MOVIE : ItemType.TV;
+      this.list$ = this.listsService.getList(name).pipe(map(list => {
+
+        if (visibility === Visibility.All || list == null) {
+          return list;
+        }
+
+        const showWatched = visibility === Visibility.Watched;
+        const filteredList = { movies: [], tvs: [], ...list };
+        filteredList.movies = filteredList.movies.filter((movie: ToDoMovie) => movie.watched === showWatched);
+        filteredList.tvs = filteredList.tvs.filter((tv: ToDoTv) => tv.watched === showWatched);
+        console.log(visibility, filteredList, params)
+        return filteredList;
+      }));
     });
   }
 
-  toggleWatch(id: number, watched: boolean) {
+  updateWatched(id: number, watched: boolean) {
     this.listsService.updateItemWatchedState(id, this.type, watched).subscribe(
       _success => {
         // do what?

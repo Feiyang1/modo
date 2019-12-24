@@ -21,12 +21,12 @@ const routes: Routes = [
         component: ListContainerComponent,
         children: [
           {
-            path: ':type', // movie or tv
+            path: ':type/:visibility',
             component: ListComponent
           },
           {
             path: '',
-            redirectTo: 'movies',
+            redirectTo: 'movies/all',
             pathMatch: 'full'
           }
         ]

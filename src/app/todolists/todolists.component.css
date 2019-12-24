@@ -1,3 +1,7 @@
 .add-list-button {
     width: 100%;
 }
+
+.todolists-container {
+    padding: 0 1em;
+}

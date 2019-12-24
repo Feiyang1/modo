@@ -1,30 +1,37 @@
-
 <ng-template #movies [ngIf]="isMovieList()" [ngIfElse]="tvs">
   <div *ngFor="let movie of (list$ | async)?.movies">
-    <div>{{movie.title}}</div>
-    <div class="watch-state">
-      <div>watched: {{movie.watched}}</div>
-      <div class="watch-toggle">
-        <div (click)="toggleWatch(movie.id, true)" *ngIf="!movie.watched">Watch</div>
-        <div (click)="toggleWatch(movie.id, false)" *ngIf="movie.watched">Unwatch</div>
+    <div class="movie-or-tv-line">
+      <div class="movie-or-tv-body">
+        <div matRipple class="watch-state" [ngClass]="{'watched': movie.watched}"
+          (click)="updateWatched(movie.id, !movie.watched)">
+          w
+        </div>
+        <div class="movie-or-tv-name">
+          <div>{{movie.title}}</div>
+          <div class="watched-time" *ngIf="movie.watched">watched at: {{movie.watched_time | date}}</div>
+        </div>
       </div>
+      <div (click)="deleteItem(movie.id)" class="movie-or-tv-delete">X</div>
     </div>
-    <div *ngIf="movie.watched">watched at: {{movie.watched_time | date}}</div>
-    <div (click)="deleteItem(movie.id)">- delete</div>
+    <mat-divider></mat-divider>
   </div>
 </ng-template>
 
 <ng-template #tvs>
   <div *ngFor="let tv of (list$ | async)?.tvs">
-    <div>{{tv.name}}</div>
-    <div class="watch-state">
-      <div>watched: {{tv.watched}}</div>
-      <div class="watch-toggle">
-        <div (click)="toggleWatch(tv.id, true)" *ngIf="!tv.watched">Watch</div>
-        <div (click)="toggleWatch(tv.id, false)" *ngIf="tv.watched">Unwatch</div>
+    <div class="movie-or-tv-line">
+      <div class="movie-or-tv-body">
+        <div matRipple class="watch-state" [ngClass]="{'watched': tv.watched}"
+          (click)="updateWatched(tv.id, !tv.watched)">
+          w
+        </div>
+        <div class="movie-or-tv-name">
+          <div>{{tv.name}}</div>
+          <div class="watched-time"*ngIf="tv.watched">watched at: {{tv.watched_time | date}}</div>
+        </div>
       </div>
+      <div (click)="deleteItem(tv.id)" class="movie-or-tv-delete">X</div>
     </div>
-    <div *ngIf="tv.watched">watched at: {{tv.watched_time | date}}</div>
-    <div (click)="deleteItem(tv.id)">- delete</div>
+    <mat-divider></mat-divider>
   </div>
 </ng-template>

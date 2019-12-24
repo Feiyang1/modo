@@ -1,0 +1,13 @@
+.list-container {
+    padding: 0 1em;
+}
+
+.filters {
+    padding-bottom: 0.3125em;
+    display: flex;
+    flex-direction: row;
+}
+
+.status-filter {
+    padding-left: 1em;
+}
