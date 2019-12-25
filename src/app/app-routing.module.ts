@@ -4,12 +4,13 @@ import { TodolistsComponent } from './todolists/todolists.component';
 import { SearchComponent } from './search/search.component';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
-import { AddlistComponent, AddlistDialogComponent } from './addlist/addlist.component';
-import { AddToListDialogComponent } from './add-to-list/add-to-list.component';
+import { AddlistComponent } from './addlist/addlist.component';
+import { AddToListComponent } from './add-to-list/add-to-list.component';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
 import { ItemType } from './search.service';
 import { DeleteListComponent } from './delete-list/delete-list.component';
+import { DialogComponent } from './dialog/dialog.component';
 
 const routes: Routes = [
   {
@@ -33,11 +34,17 @@ const routes: Routes = [
       },
       {
         path: 'addlist',
-        component: AddlistDialogComponent
+        component: DialogComponent,
+        data: {
+          component: AddlistComponent
+        }
       },
       {
         path: 'deletelist/:name',
-        component: DeleteListComponent
+        component: DialogComponent,
+        data: {
+          component: DeleteListComponent
+        }
       }
     ]
   },
@@ -55,9 +62,10 @@ const routes: Routes = [
     children: [
       {
         path: 'addtolist',
-        component: AddToListDialogComponent,
+        component: DialogComponent,
         data: {
-          type: ItemType.MOVIE
+          type: ItemType.MOVIE,
+          component: AddToListComponent
         }
       }
     ]
@@ -68,9 +76,10 @@ const routes: Routes = [
     children: [
       {
         path: 'addtolist',
-        component: AddToListDialogComponent,
+        component: DialogComponent,
         data: {
-          type: ItemType.TV
+          type: ItemType.TV,
+          component: AddToListComponent
         }
       }
     ]

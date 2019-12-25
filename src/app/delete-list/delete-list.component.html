@@ -1,10 +1,6 @@
-<div class="delete-confirmation-dialog">
-  <div>Do you want to delete {{listName}}</div>
-  <div (click)="deleteList()">
-    Yes
-  </div>
-  <div (click)="cancel()">
-    Cancel
-  </div>
-  <div class="error" *ngIf="error">{{error}}</div>
+<h1 mat-dialog-title>Do you want to delete {{listName}}</h1>
+<div mat-dialog-actions class="action-row">
+  <button mat-stroked-button (click)="deleteList()">Yes</button>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
 </div>
+<div class="error" *ngIf="error">{{error}}</div>

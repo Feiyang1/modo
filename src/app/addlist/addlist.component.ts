@@ -33,30 +33,3 @@ export class AddlistComponent implements OnInit {
   }
 
 }
-
-@Component({
-  selector: 'app-addlist-dialog',
-  template: ''
-})
-export class AddlistDialogComponent implements OnInit {
-  constructor(
-    public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
-
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    // open dialog async, otherwise we will get ExpressionChangedAfterItHasBeenCheckedError
-    setTimeout(() => {
-      const dialogRef = this.dialog.open(AddlistComponent);
-      dialogRef.afterClosed().subscribe(() => this.afterDialogClose());
-    });
-  }
-
-  private afterDialogClose(): void {
-    this.router.navigate(['..'], { relativeTo: this.route });
-  }
-}

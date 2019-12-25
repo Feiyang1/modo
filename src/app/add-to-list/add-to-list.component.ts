@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ToDoList, ListsService, ToDoMovie, ToDoTv } from '../lists.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { MovieService } from '../movie.service';
 import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -9,43 +9,7 @@ import { ItemType } from '../search.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface DialogData {
-  itemId: string;
-  type: ItemType;
-}
-@Component({
-  selector: 'app-add-to-list-dialog',
-  template: ''
-})
-export class AddToListDialogComponent implements OnInit {
-
-  constructor(
-    public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
-
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    const itemId = this.route.parent!.snapshot.paramMap.get('id')!;
-    const type = this.route.snapshot.data['type']! as ItemType;
-    // open dialog async, otherwise we will get ExpressionChangedAfterItHasBeenCheckedError
-    setTimeout(() => {
-      const dialogRef = this.dialog.open(AddToListComponent, {
-        data: {
-          itemId,
-          type
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(() => this.afterDialogClose());
-    });
-  }
-
-  private afterDialogClose(): void {
-    this.router.navigate(['..'], { relativeTo: this.route });
-  }
+  route: ActivatedRoute;
 }
 
 @Component({
@@ -57,13 +21,18 @@ export class AddToListComponent {
   lists: ToDoList[];
   error: string | null = null
   selected: string;
+  itemId!: string;
+  itemType!: ItemType;
   constructor(
     private movieService: MovieService,
     private tvService: TvService,
     private listsService: ListsService,
     public dialogRef: MatDialogRef<AddToListComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) { }
+  ) {
+    this.itemId = data.route.parent!.snapshot.paramMap.get('id')!;
+    this.itemType = data.route.snapshot.data['type']! as ItemType;
+   }
 
   ngOnInit() {
     this.listsService.getLists().subscribe((lists) => {
@@ -73,8 +42,8 @@ export class AddToListComponent {
   }
 
   add(listName: string) {
-    const itemId = this.data.itemId;
-    const type = this.data.type;
+    const itemId = this.itemId;
+    const type = this.itemType;
 
     let todoItem$: Observable<ToDoMovie | ToDoTv>;
     if (type === ItemType.MOVIE) {

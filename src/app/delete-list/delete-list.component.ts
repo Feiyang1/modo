@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListsService } from '../lists.service';
 import { Observable } from 'rxjs';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+interface DialogData {
+  route: ActivatedRoute;
+}
 @Component({
   selector: 'app-delete-list',
   templateUrl: './delete-list.component.html',
@@ -13,19 +17,19 @@ export class DeleteListComponent implements OnInit {
   error: string;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private listsService: ListsService
+    private listsService: ListsService,
+    public dialogRef: MatDialogRef<DeleteListComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) { }
 
   ngOnInit() {
-    this.listName = this.route.snapshot.paramMap.get('name') || '';
+    this.listName = this.data.route.snapshot.paramMap.get('name') || '';
   }
 
   deleteList() {
     this.listsService.deleteList(this.listName).subscribe(
       (_success) => {
-        this.router.navigate(['mylists']);
+        this.dialogRef.close();
       },
       (error) => {
         this.error = JSON.stringify(error);
@@ -33,7 +37,7 @@ export class DeleteListComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['mylists']);
+    this.dialogRef.close();
   }
 
 }
