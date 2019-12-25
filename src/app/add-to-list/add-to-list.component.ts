@@ -1,12 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ToDoList, ListsService, ToDoMovie, ToDoTv } from '../lists.service';
-import { ActivatedRoute, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../movie.service';
 import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { TvService } from '../tv.service';
 import { ItemType } from '../search.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface DialogData {
   route: ActivatedRoute;
