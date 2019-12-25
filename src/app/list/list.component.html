@@ -6,7 +6,7 @@
           (click)="updateWatched(movie.id, !movie.watched)">
           w
         </div>
-        <div class="movie-or-tv-name">
+        <div class="movie-or-tv-name" routerLink="/movie/{{movie.id}}">
           <div>{{movie.title}}</div>
           <div class="watched-time" *ngIf="movie.watched">watched at: {{movie.watched_time | date}}</div>
         </div>
@@ -25,7 +25,7 @@
           (click)="updateWatched(tv.id, !tv.watched)">
           w
         </div>
-        <div class="movie-or-tv-name">
+        <div class="movie-or-tv-name" routerLink="/tv/{{tv.id}}">
           <div>{{tv.name}}</div>
           <div class="watched-time"*ngIf="tv.watched">watched at: {{tv.watched_time | date}}</div>
         </div>
