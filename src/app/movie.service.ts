@@ -29,4 +29,6 @@ export interface MovieDetail {
   homepage?: string;
   production_companies: unknown[]; // TODO
   cast: unknown[]; // TODO
+  vote_count: number;
+  vote_average: number;
 }

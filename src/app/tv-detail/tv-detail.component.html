@@ -1,5 +1,8 @@
 <div *ngIf="tv$ | async as tv" class="tv-container">
-  <div class="tv-title line-item">TV: {{tv.name}}</div>
+  <div class="tv-title line-item">
+    <div>TV: {{tv.name}}</div>
+    <div>{{tv.vote_average}} <span class="vote-count">({{tv.vote_count}})</span></div>
+  </div>
   <div class="tv-detail">
     <div class="line-item poster-container">
       <img class="poster" [src]="posterPath(tv)">

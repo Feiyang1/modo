@@ -12,7 +12,6 @@
 }
 
 .movie-title {
-    
 }
 
 .movie-detail {
@@ -56,4 +55,8 @@
 
 .line-item .poster {
     width: 100%;
+}
+
+.vote-count {
+    font-size: 0.7em;
 }
