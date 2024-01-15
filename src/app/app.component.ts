@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Auth, user, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { Auth, user, signInWithRedirect, GoogleAuthProvider } from '@angular/fire/auth';
 import { getCachedRoute } from './route-reuse-strategy';
 
 @Component({
@@ -17,7 +17,7 @@ export class AppComponent {
   }
 
   login(): void {
-    signInWithPopup(this.auth, new GoogleAuthProvider());
+    signInWithRedirect(this.auth, new GoogleAuthProvider());
   }
 
   logout(): void {
