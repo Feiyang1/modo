@@ -19,9 +19,8 @@ export class TmdbHttpClientService {
   }
 }
 
-function addAPIKEY(params?: HttpParams | {
-  [param: string]: string | string[];
-}): HttpParams {
+function addAPIKEY(params?: HttpParams |
+{ [param: string]: string | number | boolean | readonly (string | number | boolean)[]; }): HttpParams {
 
   let myParams = params || {};
 

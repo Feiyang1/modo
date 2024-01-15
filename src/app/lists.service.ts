@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, throwError, from, zip } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
+import {
+  Firestore, collection, collectionData, doc, docData,
+  runTransaction, arrayUnion, deleteDoc, getDocs, writeBatch
+} from '@angular/fire/firestore';
+import { Auth, user } from '@angular/fire/auth';
 import { map, switchMap } from 'rxjs/operators';
-import { firestore } from 'firebase/app';
 import { ItemType } from './search.service';
 import { todoArrayName } from './util';
 
@@ -12,19 +14,18 @@ import { todoArrayName } from './util';
   providedIn: 'root'
 })
 export class ListsService {
-
+  private firestore: Firestore = inject(Firestore);
+  private auth: Auth = inject(Auth);
   constructor(
-    private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth
   ) { }
 
   getLists(): Observable<ToDoList[]> {
-    return this.afAuth.user.pipe(switchMap(user => {
+    return user(this.auth).pipe(switchMap(user => {
       if (!user) {
         return throwError('not logged in');
       }
 
-      return this.firestore.collection(`users/${user.uid}/lists`).valueChanges().pipe(map(querySnapshot => {
+      return collectionData(collection(this.firestore, `users/${user.uid}/lists`)).pipe(map(querySnapshot => {
         const lists: ToDoList[] = [];
         querySnapshot.forEach(result => {
           lists.push(result as ToDoList);
@@ -35,17 +36,17 @@ export class ListsService {
   }
 
   getListOnce(name: string): Observable<ToDoList> {
-    return this.afAuth.user.pipe(switchMap(user => {
+    return user(this.auth).pipe(switchMap(user => {
       if (!user) {
         return throwError('not logged in');
       }
 
-      return this.firestore.doc(`users/${user.uid}/lists/${name}`).get().pipe(map(doc => doc.data() as ToDoList))
+      return docData(doc(this.firestore, `users/${user.uid}/lists/${name}`)).pipe(map(doc => doc!.data() as ToDoList))
     }));
   }
 
   getList(name: string): Observable<ToDoList | null> {
-    return this.afAuth.user.pipe(
+    return user(this.auth).pipe(
       switchMap(user => {
         if (!user) {
           return throwError('not logged in');
@@ -54,7 +55,7 @@ export class ListsService {
         return of(user);
       }),
       switchMap(user =>
-        this.firestore.doc(`users/${user.uid}/lists/${name}`).valueChanges() as Observable<ToDoList | null>
+        docData(doc(this.firestore, `users/${user.uid}/lists/${name}`)) as Observable<ToDoList | null>
       )
     );
 
@@ -62,17 +63,17 @@ export class ListsService {
 
   addToList(listName: string, item: ToDoMovie | ToDoTv, itemType: ItemType): Observable<boolean> {
 
-    return this.afAuth.user.pipe(
+    return user(this.auth).pipe(
       switchMap(user => {
         if (!user) {
           return throwError('not logged in');
         }
 
-        const docRef = this.firestore.firestore.doc(`users/${user.uid}/lists/${listName}`);
+        const docRef = doc(this.firestore, `users/${user.uid}/lists/${listName}`);
         const arrayName = todoArrayName(itemType);
 
 
-        return from(this.firestore.firestore.runTransaction(async transaction => {
+        return from(runTransaction(this.firestore, async transaction => {
 
           const doc = await transaction.get(docRef);
           if (!doc.exists) {
@@ -85,7 +86,7 @@ export class ListsService {
           }
 
           transaction.update(docRef, {
-            [arrayName]: firestore.FieldValue.arrayUnion({
+            [arrayName]: arrayUnion({
               ...item,
               watched: false
             })
@@ -104,19 +105,19 @@ export class ListsService {
       tvs: []
     };
 
-    return this.afAuth.user.pipe(
+    return user(this.auth).pipe(
       switchMap(user => {
         if (!user) {
           return throwError('not logged in');
         }
 
-        const docRef = this.firestore.firestore.doc(`users/${user.uid}/lists/${name}`);
+        const docRef = doc(this.firestore, `users/${user.uid}/lists/${name}`);
 
         return from(
-          this.firestore.firestore.runTransaction(async transaction => {
+          runTransaction(this.firestore, async transaction => {
             const doc = await transaction.get(docRef);
 
-            if (doc.exists) {
+            if (doc.exists()) {
               throw Error(`List ${name} already exists`);
             }
             transaction.set(docRef, newList);
@@ -128,7 +129,7 @@ export class ListsService {
   }
 
   deleteList(name: string): Observable<boolean> {
-    return this.afAuth.user.pipe(
+    return user(this.auth).pipe(
       switchMap(user => {
         if (!user) {
           return throwError('not logged in');
@@ -137,7 +138,7 @@ export class ListsService {
 
         // Firestore write promises don't resolve until they hit the server.
         // For offline to work correctly, we are not waiting for the promise to resolve before returning the control
-        this.firestore.doc(docPath).delete().then(
+        deleteDoc(doc(this.firestore, docPath)).then(
           (_res) => {
             // no op
           },
@@ -157,7 +158,7 @@ export class ListsService {
     console.log('update movie watched')
     const arrayName = todoArrayName(itemType);
 
-    return this.afAuth.user.pipe(
+    return user(this.auth).pipe(
       switchMap(user => {
         if (!user) {
           return throwError('not logged in');
@@ -166,10 +167,10 @@ export class ListsService {
         return of(user);
       }),
       switchMap(user =>
-        this.firestore.collection(`users/${user.uid}/lists`).get()
+        getDocs(collection(this.firestore, `users/${user.uid}/lists`))
       ),
       switchMap(querySnapshot => {
-        const batch = this.firestore.firestore.batch();
+        const batch = writeBatch(this.firestore);
         querySnapshot.forEach(result => {
           const list = result.data() as ToDoList;
           const item: ToDoMovie | ToDoTv = (list[arrayName] as any[]).find(item => item.id === itemId);
@@ -195,7 +196,7 @@ export class ListsService {
 
   deleteItem(listName: string, itemId: number, itemType: ItemType): Observable<boolean> {
     const arrayName = todoArrayName(itemType);
-    return this.afAuth.user.pipe(
+    return user(this.auth).pipe(
       switchMap(user => {
         if (!user) {
           return throwError('not logged in');
@@ -204,9 +205,9 @@ export class ListsService {
         return of(user);
       }),
       switchMap(user => {
-        const docRef = this.firestore.firestore.doc(`users/${user.uid}/lists/${listName}`);
+        const docRef = doc(this.firestore, `users/${user.uid}/lists/${listName}`);
         return from(
-          this.firestore.firestore.runTransaction(async transaction => {
+          runTransaction(this.firestore, async transaction => {
             const doc = await transaction.get(docRef);
             if (!doc.exists) {
               throw Error(`List ${listName} doesn't exist`);

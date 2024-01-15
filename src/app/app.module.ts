@@ -11,9 +11,9 @@ import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { ListComponent } from './list/list.component';
 import { AddlistComponent } from './addlist/addlist.component';
 import { AddToListComponent } from './add-to-list/add-to-list.component';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { ListContainerComponent } from './list-container/list-container.component';
 import { TvDetailComponent } from './tv-detail/tv-detail.component';
@@ -51,15 +51,14 @@ import { DialogComponent } from './dialog/dialog.component'
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
-    AngularFirestoreModule.enablePersistence(),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true }),
     BrowserAnimationsModule,
     CustomMaterialModule,
     ScrollingModule
   ],
-  entryComponents: [AddToListComponent, AddlistComponent, DeleteListComponent],
   providers: [
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],

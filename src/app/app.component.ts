@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { Auth, user, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 import { getCachedRoute } from './route-reuse-strategy';
 
 @Component({
@@ -11,19 +9,19 @@ import { getCachedRoute } from './route-reuse-strategy';
 })
 export class AppComponent {
   title = 'modo';
-  user$: Observable<any>;
-  constructor(private afAuth: AngularFireAuth) { }
+  private auth: Auth = inject(Auth)
+  user$ = user(this.auth);
+  constructor() { }
 
   ngOnInit() {
-    this.user$ = this.afAuth.user;
   }
 
   login(): void {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    signInWithPopup(this.auth, new GoogleAuthProvider());
   }
 
   logout(): void {
-    this.afAuth.auth.signOut();
+    this.auth.signOut();
   }
 
   // if a cached search is found, navigate to it

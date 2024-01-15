@@ -34,7 +34,7 @@ export class ListComponent implements OnInit {
         }
 
         const showWatched = visibility === Visibility.Watched;
-        const filteredList = { movies: [], tvs: [], ...list };
+        const filteredList = { ...list };
         filteredList.movies = filteredList.movies.filter((movie: ToDoMovie) => movie.watched === showWatched);
         filteredList.tvs = filteredList.tvs.filter((tv: ToDoTv) => tv.watched === showWatched);
         console.log(visibility, filteredList, params)
