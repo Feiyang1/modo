@@ -33,7 +33,7 @@
     "@angular/service-worker": "~17.0.9",
     "@angular/ssr": "17.0.10",
     "core-js": "^2.5.4",
-    "express": "^4.17.3",
+    "express": "^4.19.2",
     "firebase": "^10.7.1",
     "hammerjs": "^2.0.8",
     "rxjs": "~7.8.1",
